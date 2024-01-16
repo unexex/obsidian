@@ -16,16 +16,16 @@
 #include "luaconf.h"
 
 
-#define LUA_VERSION_MAJOR	"5"
-#define LUA_VERSION_MINOR	"4"
-#define LUA_VERSION_RELEASE	"4"
+#define LUA_VERSION_MAJOR	"1"
+#define LUA_VERSION_MINOR	"0"
+#define LUA_VERSION_RELEASE	"0"
 
 #define LUA_VERSION_NUM			504
 #define LUA_VERSION_RELEASE_NUM		(LUA_VERSION_NUM * 100 + 4)
 
-#define LUA_VERSION	"Obsidian based on Lua " LUA_VERSION_MAJOR "." LUA_VERSION_MINOR
+#define LUA_VERSION	"Obsidian " LUA_VERSION_MAJOR "." LUA_VERSION_MINOR
 #define LUA_RELEASE	LUA_VERSION "." LUA_VERSION_RELEASE
-#define LUA_COPYRIGHT	LUA_RELEASE "  Copyright (C) 1994-2022 Lua.org, PUC-Rio"
+#define LUA_COPYRIGHT	LUA_RELEASE "  Copyright (C) 2024 Unexex"
 #define LUA_AUTHORS	"R. Ierusalimschy, L. H. de Figueiredo, W. Celes, Domingo Alvarez Duarte, Aarav Sethi (Unexex)"
 
 

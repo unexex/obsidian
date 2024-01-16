@@ -42,17 +42,20 @@ static TString **tmname;
 int type = 0; // 0 = wasm, 1 = js //, 2 = html
 int opt = 0;
 int alloc = 1;
+int debug = 0;
 static
 void usage()
 {
     fprintf(stderr,
           "usage: %s [options] [filename]\n"
           "Available options are:\n"
+          "  -h                 show this help\n"
+          "  -v                 show version\n"
           "  -o name            output to file 'name'\n"
           "  -f                 optimize source code (will bulk up)\n"
           "  -js                output JavaScript\n"
           "  -a                 disable memory allocation\n"
-          //"  -html              output HTML\n"
+          "  -g                 debug mode\n"
           "  -wasm              output WebAssembly (default)\n"
           "  -s                 use  switches instead of gotos in generated code\n",
           program_name);
@@ -109,6 +112,9 @@ static void doargs(int argc, char **argv)
             } else if (0 == strcmp(arg, "-h")) {
                 usage();
                 exit(0);
+            } else if (0 == strcmp(arg, "-v")) {
+                printf("%s\n", LUA_COPYRIGHT);
+                exit(0);
             } else if (0 == strcmp(arg, "-js")) {
                 type = 1;
             /*} else if (0 == strcmp(arg, "-html")) {
@@ -117,6 +123,8 @@ static void doargs(int argc, char **argv)
                 type = 0;
             } else if (0 == strcmp(arg, "-f")) {
                 opt = 1;
+            } else if (0 == strcmp(arg, "-g")) {
+                debug = 1;
             } else if (0 == strcmp(arg, "-a")){
                 alloc = 0;
             } else if (0 == strcmp(arg, "-o")) {
@@ -245,13 +253,16 @@ int main(int argc, char **argv)
     if (opt){
         strcat(style, " -O3 -fPIC");
     }
+    if (debug) {
+        strcat(style, " -g");
+    }
     sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_filename);
 
     printf("Compiling with command: %s\n", command);
     system(command);
-
-    remove("ob_temp.c");
- 
+    if (!debug){
+        remove("ob_temp.c");
+    }
     return 0;
 }
 
