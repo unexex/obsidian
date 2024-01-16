@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include <lua.h>
+#include "lua.h"
 #include "lauxlib.h"
 #define CHUNK_COUNT 15
 #define MAX_BLOCK_SIZE 640
