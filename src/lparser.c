@@ -191,68 +191,6 @@ static int registerlocalvar (LexState *ls, FuncState *fs, TString *varname) {
   luaC_objbarrier(ls->L, f, varname);
   return fs->ndebugvars++;
 }
-#if 0
-static void var_check_unique_or_shadow0 (LexState *ls, FuncState *fs, TString *name, int shadowOnly) {
-  Dyndata *dyd = ls->dyd;
-
-  /* allow '_' and '(for...' duplicates */
-  const char *str_name = getstr(name);
-  if(!(str_name[0] == '(' || (tsslen(name) == 1 && str_name[0] == '_'))) {
-    int vidx, nactvar_n, first_block_local;
-    vidx = fs->firstlocal;
-    nactvar_n = dyd->actvar.n;
-    //nactvar_n = fs->nactvar;
-    first_block_local = fs->bl ? fs->bl->nactvar+fs->firstlocal : 0;
-    for (; vidx < nactvar_n; ++vidx) {
-      Vardesc *vd = &dyd->actvar.arr[fs->firstlocal + vidx];
-      if (vd && name == vd->vd.name) {
-      //LocVar *lv = &fs->f->locvars[dyd->actvar.arr[vidx].vd.ridx];
-      //if (lv && name == lv->varname) {
-        if(vidx <= first_block_local) {
-          int saved_top = lua_gettop(ls->L);
-          //lua_warning(ls->L, luaO_pushfstring(ls->L,
-          //       "Name [%s] already declared will be shadowed", str_name), 0);
-          luaX_syntaxwarning(ls, luaO_pushfstring(ls->L,
-                 "Name [%s] already declared will be shadowed", str_name));
-          lua_settop(ls->L, saved_top);
-        }
-        else if(!shadowOnly) {
-          luaX_syntaxerror(ls, luaO_pushfstring(ls->L,
-                 "Name [%s] already declared", str_name));
-        }
-      }
-    }
-  }
-  //if(fs->prev) var_check_unique_or_shadow(ls, fs->prev, name, 1);
-}
-#endif
-static void var_check_unique_or_shadow (LexState *ls, FuncState *fs, TString *name, int shadowOnly) {
-  Dyndata *dyd = ls->dyd;
-
-  /* allow '_' and '(for...' duplicates */
-  const char *str_name = getstr(name);
-  if(!(str_name[0] == '(' || (tsslen(name) == 1 && str_name[0] == '_'))) {
-    int vidx, nactvar_n, first_block_local;
-    vidx = 0;
-    nactvar_n = dyd->actvar.n;
-    first_block_local = fs->bl ? fs->bl->nactvar+fs->firstlocal : fs->firstlocal;
-    for (; vidx < nactvar_n; ++vidx) {
-      Vardesc *vd = dyd->actvar.arr+vidx;
-      if (vd && name == vd->vd.name) {
-        if(vidx <= first_block_local) {
-          int saved_top = lua_gettop(ls->L);
-          luaX_syntaxwarning(ls, luaO_pushfstring(ls->L,
-                 "Name [%s] already declared will be shadowed", str_name));
-          lua_settop(ls->L, saved_top);
-        }
-        else if(!shadowOnly) {
-          luaX_syntaxerror(ls, luaO_pushfstring(ls->L,
-                 "Name [%s] already declared", str_name));
-        }
-      }
-    }
-  }
-}
 
 
 /*
@@ -265,7 +203,7 @@ static int new_localvar (LexState *ls, TString *name) {
   Dyndata *dyd = ls->dyd;
   
   //var_check_unique_or_shadow0(fs, name, 1);
-  var_check_unique_or_shadow(ls, fs, name, 0);
+  //var_check_unique_or_shadow(ls, fs, name, 0);
 #if 0
   int vidx, nactvar_n;
   vidx = fs->bl ? fs->bl->nactvar + fs->firstlocal : fs->firstlocal;

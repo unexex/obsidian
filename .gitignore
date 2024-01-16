@@ -3,3 +3,4 @@
 *.wasm
 luaot-trampoline
 ob
+test.*
