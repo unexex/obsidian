@@ -39,10 +39,11 @@ static FILE * output_file = NULL;
 static int nfunctions = 0;
 static TString **tmname;
 
-int type = 0; // 0 = wasm, 1 = js //, 2 = html
+int type = 1; // 0 = wasm, 1 = js
 int opt = 0;
 int alloc = 1;
 int debug = 0;
+int partial = 0;
 static
 void usage()
 {
@@ -50,14 +51,15 @@ void usage()
           "usage: %s [options] [filename]\n"
           "Available options are:\n"
           "  -h                 show this help\n"
+          "  -p                 no partial evaluator\n"
           "  -v                 show version\n"
           "  -o name            output to file 'name'\n"
           "  -f                 optimize source code (will bulk up)\n"
-          "  -js                output JavaScript\n"
+          "  -js                output JavaScript (default)\n"
           "  -a                 disable memory allocation\n"
           "  -g                 debug mode\n"
-          "  -wasm              output WebAssembly (default)\n"
-          "  -s                 use  switches instead of gotos in generated code\n",
+          "  -wasm              output WebAssembly\n"
+          "  -s                 use switches instead of gotos in generated code\n",
           program_name);
 }
 
@@ -117,10 +119,10 @@ static void doargs(int argc, char **argv)
                 exit(0);
             } else if (0 == strcmp(arg, "-js")) {
                 type = 1;
-            /*} else if (0 == strcmp(arg, "-html")) {
-                type = 2;*/
             } else if (0 == strcmp(arg, "-wasm")) {
                 type = 0;
+            } else if (0 == strcmp(arg, "-p")) {
+                partial = 1;
             } else if (0 == strcmp(arg, "-f")) {
                 opt = 1;
             } else if (0 == strcmp(arg, "-g")) {
@@ -246,9 +248,7 @@ int main(int argc, char **argv)
         case 1:
             strcpy(style, "-sWASM=0");
             break;
-        case 2:
-            strcpy(style, "-sWASM=0");
-            break;
+        // Support more later
     }
     if (opt){
         strcat(style, " -O3 -fPIC");
@@ -256,12 +256,33 @@ int main(int argc, char **argv)
     if (debug) {
         strcat(style, " -g");
     }
-    sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_filename);
+
+    char output_name[64];
+    strncpy(output_name, output_filename, sizeof(output_name) - 1);
+    output_name[sizeof(output_name) - 1] = '\0'; // Ensure null-termination
+    if (partial && type == 1){
+        strcat(output_name, " .prepack");
+    }
+    sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_name);
 
     printf("Compiling with command: %s\n", command);
     system(command);
     if (!debug){
         remove("ob_temp.c");
+    }
+
+    if (partial && type == 1){
+        printf("Optimizing with prepack...\n");
+        if (system("prepack --version") != 0) {
+            fatal_error("prepack not found, use 'npm install -g unexex/prepack'");
+        }
+        sprintf(command, "prepack %s -o %s", output_name, output_filename);
+        printf("Optimizing with command: %s\n", command);
+        system(command);
+
+        if (!debug){
+            remove(output_name);
+        }
     }
     return 0;
 }
