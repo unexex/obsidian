@@ -28,7 +28,7 @@ void println_goto_ret()
 }
 
 static
-void create_function(Proto *f)
+void gcreate_function(Proto *f)
 {
     int func_id = nfunctions++;
 

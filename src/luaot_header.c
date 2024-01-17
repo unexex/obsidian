@@ -13,7 +13,6 @@
 #include "lstate.h"
 #include "lstring.h"
 #include "ltable.h"
-#include "lvm.h"
 #include "lapi.h"
 #include "lalloc.h"
 

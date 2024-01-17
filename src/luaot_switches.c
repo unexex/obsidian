@@ -7,7 +7,7 @@
 //
 
 static
-void println_goto_ret()
+void sprintln_goto_ret()
 {
     // This is the piece of code that is after the "ret" label.
     // It should be used in the places that do "goto ret;"
@@ -20,7 +20,7 @@ void println_goto_ret()
 }
 
 static
-void create_function(Proto *f)
+void screate_function(Proto *f)
 {
     int func_id = nfunctions++;
 

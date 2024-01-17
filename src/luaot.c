@@ -41,7 +41,7 @@ static TString **tmname;
 
 int type = 1; // 0 = wasm, 1 = js
 int opt = 0;
-int alloc = 1;
+int alloc = 0;
 int debug = 0;
 int partial = 0;
 int shrink = 0;
@@ -61,10 +61,10 @@ void usage()
           "  -f                 optimize source code (will bulk up)\n"
           "  -z                 shrink source code (will slow down)\n"
           "  -js                output JavaScript (default)\n"
-          "  -a                 disable memory allocation\n"
+          "  -a                 enable pool memory allocation\n"
           "  -g                 debug mode\n"
           "  -wasm              output WebAssembly\n"
-          "  -s                 use switches instead of gotos in generated code\n",
+          "  -t                 use gotos instead of switches in generated code (testing)\n",
           program_name);
 }
 
@@ -132,12 +132,12 @@ static void doargs(int argc, char **argv)
                 opt = 1;
             } else if (0 == strcmp(arg, "-z")) {
                 shrink = 1;
-            } else if (0 == strcmp(arg, "-s")) {
+            } else if (0 == strcmp(arg, "-t")) {
                 goto_mode = 1;
             } else if (0 == strcmp(arg, "-g")) {
                 debug = 1;
             } else if (0 == strcmp(arg, "-a")){
-                alloc = 0;
+                alloc = 1;
             } else if (0 == strcmp(arg, "-o")) {
                 i++;
                 if (i >= argc) { fatal_error("missing argument for -o"); }
@@ -874,12 +874,20 @@ void luaot_PrintOpcodeComment(Proto *f, int pc)
     }
     print("\n");
 }
+static void gcreate_function(Proto *f);
+static void screate_function(Proto *f);
 
-if (goto_mode) {
-    #include "luaot_gotos.c"
-} else {
-    #include "luaot_switches.c"
-}   
+#include "luaot_gotos.c"
+#include "luaot_switches.c"
+   
+static void create_function(Proto *f)
+{
+    if (goto_mode) {
+        gcreate_function(f);
+    } else {
+        screate_function(f);
+    }
+}
 
 static
 void create_functions(Proto *p)
