@@ -61,7 +61,7 @@ void usage()
           "  -o name            output to file 'name'\n"
           "  -g                 debug mode\n"
           " Optimization options:\n"
-          "  -p                 partial evaluator (JS only & experimental)\n"
+          //"  -p                 partial evaluator (JS only & experimental)\n"
           "  -f                 bulk-optimize source code (can also slow down)\n"
           "  -z                 disable shrink optimize source code (reccomended)\n"
           "  -a                 enable pool memory allocation (for memory-heavy scripts)\n"
@@ -364,9 +364,9 @@ int main(int argc, char **argv)
         char output_name[64];
         strncpy(output_name, output_filename, sizeof(output_name) - 1);
         output_name[sizeof(output_name) - 1] = '\0'; // Ensure null-termination
-        if (partial && type == 1){
+       /* if (partial && type == 1){
             strcat(output_name, ".unoptimized");
-        }
+        }*/
         sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_name);
 
         if (debug) printf("Compiling with command: %s\n", command);
@@ -375,7 +375,7 @@ int main(int argc, char **argv)
             remove("ob_temp.c");
         }
 
-        if (partial){
+        /*if (partial){
             if (debug) printf("Optimizing %s -> %s", output_name, output_filename);
             if (system("prepack --version > /dev/null 2>&1") != 0) {
                 fatal_error("prepack not found, use 'npm install -g unexex/prepack'");
@@ -392,7 +392,7 @@ int main(int argc, char **argv)
                 }
             }
         }
-    }else if (type == 0){ // Rust (maybe for WASM)
+    */}else if (type == 0){ // Rust (maybe for WASM)
 
     }
     return 0;
