@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 
 #include "lua.h"
@@ -55,7 +56,7 @@ void usage()
           "usage: %s [options] [filenames]\n"
           "Available options are:\n"
           "  -h                 show this help\n"
-          "  -p                 partial evaluator\n"
+          "  -p                 partial evaluator (JS only & experimental)\n"
           "  -v                 show version\n"
           "  -o name            output to file 'name'\n"
           "  -f                 bulk-optimize source code (can also slow down)\n"
@@ -64,7 +65,7 @@ void usage()
           "  -a                 enable pool memory allocation (for memory-heavy scripts)\n"
           "  -g                 debug mode\n"
           "  -wasm              output WebAssembly\n"
-          "  -t                 use gotos instead of switches in generated code (not production ready)\n",
+          "  -t                 use gotos instead of switches in generated code (experimental)\n",
           program_name);
 }
 
@@ -235,6 +236,9 @@ int main(int argc, char **argv)
     } else {
         println("#include \"trampoline_footer.c\"");
     }
+    if (alloc) {
+        println("#include \"lalloc.h\"");
+    }
     for (int i = 0; i < 100; i++){
         if (strlen(secondaryFiles[i]) > 0){
             char str[12];
@@ -273,10 +277,10 @@ int main(int argc, char **argv)
       println("int main(int argc, char *argv[]) {");
       println(" lua_State *L = luaL_newstate();");
       println(" luaL_openlibs(L);");
-      /*if (alloc){ TODO: Add libs
-        println(" luaL_requiref(L, \"alloc\", luaopen_alloc, 1);");
+      if (alloc){
+        println(" init_pool_alloc();" );
       }
-      for (int i = 0; i < 100; i++){
+      /*for (int i = 0; i < 100; i++){ TODO: Add libs
         if (strlen(secondaryFiles[i]) > 0){
             char str[12];
             sprintf(str, "%d", i);
@@ -305,7 +309,7 @@ int main(int argc, char **argv)
 
     fclose(output_file);
 
-    if (system("emcc -v") != 0) {
+    if (system("emcc -v > /dev/null 2>&1") != 0) {
         fatal_error("emcc not found");
     }
 
@@ -333,28 +337,34 @@ int main(int argc, char **argv)
     strncpy(output_name, output_filename, sizeof(output_name) - 1);
     output_name[sizeof(output_name) - 1] = '\0'; // Ensure null-termination
     if (partial && type == 1){
-        strcat(output_name, " .prepack");
+        strcat(output_name, ".unoptimized");
     }
     sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_name);
 
-    printf("Compiling with command: %s\n", command);
+    if (debug) printf("Compiling with command: %s\n", command);
     system(command);
     if (!debug){
         remove("ob_temp.c");
     }
 
     if (partial && type == 1){
-        printf("Optimizing with prepack...\n");
-        if (system("prepack --version") != 0) {
+        if (debug) printf("Optimizing %s -> %s", output_name, output_filename);
+        if (system("prepack --version > /dev/null 2>&1") != 0) {
             fatal_error("prepack not found, use 'npm install -g unexex/prepack'");
         }
-        sprintf(command, "prepack %s -o %s", output_name, output_filename);
-        printf("Optimizing with command: %s\n", command);
-        system(command);
+        char command2[1024];
+        sprintf(command2, "prepack %s --out %s", output_name, output_filename);
 
+        system(command2);
         if (!debug){
             remove(output_name);
+            strcat(output_name, ".mem");
+            if (access(output_name, F_OK) != -1) {
+                remove(output_name);
+            }
         }
+    }else if (partial){
+        fatal_error("Partial evaluation is only supported for JavaScript");
     }
     return 0;
 }
