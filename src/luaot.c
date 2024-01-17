@@ -44,7 +44,7 @@ int opt = 0;
 int alloc = 0;
 int debug = 0;
 int partial = 0;
-int shrink = 0;
+int shrink = 1;
 int goto_mode = 0;
 char secondaryFiles[100][20];
 
@@ -59,7 +59,7 @@ void usage()
           "  -v                 show version\n"
           "  -o name            output to file 'name'\n"
           "  -f                 optimize source code (will bulk up)\n"
-          "  -z                 shrink source code (will slow down)\n"
+          "  -z                 disable shrink optimize source code\n"
           "  -js                output JavaScript (default)\n"
           "  -a                 enable pool memory allocation\n"
           "  -g                 debug mode\n"
@@ -131,7 +131,7 @@ static void doargs(int argc, char **argv)
             } else if (0 == strcmp(arg, "-f")) {
                 opt = 1;
             } else if (0 == strcmp(arg, "-z")) {
-                shrink = 1;
+                shrink = 0;
             } else if (0 == strcmp(arg, "-t")) {
                 goto_mode = 1;
             } else if (0 == strcmp(arg, "-g")) {
