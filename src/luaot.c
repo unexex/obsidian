@@ -44,11 +44,13 @@ int opt = 0;
 int alloc = 1;
 int debug = 0;
 int partial = 0;
+char secondaryFiles[100][20];
+
 static
 void usage()
 {
     fprintf(stderr,
-          "usage: %s [options] [filename]\n"
+          "usage: %s [options] [filenames]\n"
           "Available options are:\n"
           "  -h                 show this help\n"
           "  -p                 no partial evaluator\n"
@@ -138,13 +140,12 @@ static void doargs(int argc, char **argv)
                 exit(1);
             }
         } else {
-            switch (npos) {
-                case 0:
-                    input_filename = arg;
-                    break;
-                default:
-                    fatal_error("too many positional arguments");
-                    break;
+            if (npos == 0) {
+                input_filename = arg;
+            } else if (npos < 100) {
+                strcpy(secondaryFiles[npos-1], arg);
+            } else {
+                fatal_error("too many input files");
             }
             npos++;
         }
@@ -159,8 +160,8 @@ static void doargs(int argc, char **argv)
 static char *get_module_name_from_filename(const char *);
 static void check_module_name(const char *);
 static void replace_dots(char *);
-static void print_functions();
-static void print_source_code();
+static void print_functions(Proto *, char *);
+static void print_source_code(char *, char *);
 
 int main(int argc, char **argv)
 {
@@ -194,9 +195,30 @@ int main(int argc, char **argv)
     println("#include \"trampoline_header.c\"");
     #endif
     printnl();
-    print_functions(proto);
+    print_functions(proto, "");
+    for (int i = 0; i < 100; i++){
+        if (strlen(secondaryFiles[i]) > 0){
+            if (luaL_loadfile(L, secondaryFiles[i]) != LUA_OK) {
+                fatal_error(lua_tostring(L,-1));
+            }
+            Proto *module = getproto(s2v(L->top-1));
+
+            char str[12];
+            sprintf(str, "%d", i);
+
+            print_functions(module, str);
+        }
+    }
     printnl();
-    print_source_code();
+    print_source_code(input_filename, "");
+    for (int i = 0; i < 100; i++){
+        if (strlen(secondaryFiles[i]) > 0){
+            char str[12];
+            sprintf(str, "%d", i);
+
+            print_source_code(secondaryFiles[i], str);
+        }
+    }
     printnl();
     println("#define LUAOT_MODULE_NAME \"%s\"", module_name);
     println("#define LUAOT_LUAOPEN_NAME luaopen_%s", module_name);
@@ -206,15 +228,56 @@ int main(int argc, char **argv)
     #elif defined(LUAOT_USE_SWITCHES)
     println("#include \"trampoline_footer.c\"");
     #endif 
+    for (int i = 0; i < 100; i++){
+        if (strlen(secondaryFiles[i]) > 0){
+            char str[12];
+            sprintf(str, "%d", i);
+
+            println("int luaopen_submodule_%s(lua_State *L) {", str);
+            println("    int ok = luaL_loadbuffer(L, LUAOT_MODULE_SOURCE_CODE_%s, sizeof(LUAOT_MODULE_SOURCE_CODE_%s)-1, \"Obsidian compiled module \\\"\"LUAOT_MODULE_NAME\"\\\"\");", str, str);
+            println("    switch (ok) {" );
+            println("      case LUA_OK:" );
+            println("        /* No errors */" );
+            println("        break;" );
+            println("      case LUA_ERRSYNTAX:" );
+            println("        fprintf(stderr, \"syntax error in bundled source code.\\n\");");
+            println("        exit(1);" );
+            println("        break;" );
+            println("      case LUA_ERRMEM:" );
+            println("        fprintf(stderr, \"memory allocation (out-of-memory) error in bundled source code.\\n\");" );
+            println("        exit(1);" );
+            println("        break;" );
+            println("      default:" );
+            println("        fprintf(stderr, \"unknown error. This should never happen\\n\");" );
+            println("        exit(1);" );
+            println("    }" );
+
+            println("    LClosure *cl = (void *) lua_topointer(L, -1);" );
+            println("    bind_magic(cl->p);" );
+
+            println("    lua_call(L, 0, 1);" );
+            println("    return 1;" );
+            println("}" );
+        }
+    }
     //if (executable) {
       printnl();
       printnl();
       println("int main(int argc, char *argv[]) {");
       println(" lua_State *L = luaL_newstate();");
       println(" luaL_openlibs(L);");
-      if (alloc){
-        println(" luaopen_alloc(L);");
+      /*if (alloc){ TODO: Add libs
+        println(" luaL_requiref(L, \"alloc\", luaopen_alloc, 1);");
       }
+      for (int i = 0; i < 100; i++){
+        if (strlen(secondaryFiles[i]) > 0){
+            char str[12];
+            sprintf(str, "%d", i);
+            
+            char* modName = strtok(secondaryFiles[i], ".");
+            println(" luaL_requiref(L, \"%s\", luaopen_submodule_%s, 1);", modName, str);
+        }
+      }*/
       println(" int i;");
       println(" lua_createtable(L, argc + 1, 0);");
       println(" for (i = 0; i < argc; i++) {");
@@ -243,10 +306,10 @@ int main(int argc, char **argv)
     char style[20];
     switch (type){
         case 0:
-            strcpy(style, "-sWASM=1");
+            strcpy(style, "-s WASM=1");
             break;
         case 1:
-            strcpy(style, "-sWASM=0");
+            strcpy(style, "-s WASM=0");
             break;
         // Support more later
     }
@@ -822,11 +885,15 @@ void create_functions(Proto *p)
 }
 
 static
-void print_functions(Proto *p)
+void print_functions(Proto *p, char* prefix)
 {
     create_functions(p);
 
-    println("static AotCompiledFunction LUAOT_FUNCTIONS[] = {");
+    if (prefix == "") {
+        println("static AotCompiledFunction LUAOT_FUNCTIONS[] = {");
+    } else {
+        println("static AotCompiledFunction LUAOT_FUNCTIONS_%s[] = {", prefix);
+    }
     for (int i = 0; i < nfunctions; i++) {
         println("  magic_implementation_%02d,", i);
     }
@@ -835,7 +902,7 @@ void print_functions(Proto *p)
 }
 
 static
-void print_source_code()
+void print_source_code(char* filename, char* prefix)
 {
     // Since the code we are generating is lifted from lvm.c, we need it to use
     // Lua functions instead of C functions. And to create the Lua functions,
@@ -846,10 +913,14 @@ void print_source_code()
     // string literal can be, so instead of using a string literal, we use a
     // plain char array instead.
 
-    FILE *infile = fopen(input_filename, "r");
+    FILE *infile = fopen(filename, "r");
     if (!infile) { fatal_error("could not open input file a second time"); }
 
-    println("static const char LUAOT_MODULE_SOURCE_CODE[] = {");
+    if (prefix == "") {
+        println("static const char LUAOT_MODULE_SOURCE_CODE[] = {");
+    } else {
+        println("static const char LUAOT_MODULE_SOURCE_CODE_%s[] = {", prefix);
+    }
 
     int c;
     int col = 0;
