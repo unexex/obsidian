@@ -55,16 +55,16 @@ void usage()
           "usage: %s [options] [filenames]\n"
           "Available options are:\n"
           "  -h                 show this help\n"
-          "  -p                 no partial evaluator\n"
+          "  -p                 partial evaluator\n"
           "  -v                 show version\n"
           "  -o name            output to file 'name'\n"
-          "  -f                 optimize source code (will bulk up)\n"
-          "  -z                 disable shrink optimize source code\n"
+          "  -f                 bulk-optimize source code (can also slow down)\n"
+          "  -z                 disable shrink optimize source code (reccomended)\n"
           "  -js                output JavaScript (default)\n"
-          "  -a                 enable pool memory allocation\n"
+          "  -a                 enable pool memory allocation (for memory-heavy scripts)\n"
           "  -g                 debug mode\n"
           "  -wasm              output WebAssembly\n"
-          "  -t                 use gotos instead of switches in generated code (testing)\n",
+          "  -t                 use gotos instead of switches in generated code (not production ready)\n",
           program_name);
 }
 
