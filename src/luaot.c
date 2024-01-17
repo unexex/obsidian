@@ -44,6 +44,8 @@ int opt = 0;
 int alloc = 1;
 int debug = 0;
 int partial = 0;
+int shrink = 0;
+int goto_mode = 0;
 char secondaryFiles[100][20];
 
 static
@@ -57,6 +59,7 @@ void usage()
           "  -v                 show version\n"
           "  -o name            output to file 'name'\n"
           "  -f                 optimize source code (will bulk up)\n"
+          "  -z                 shrink source code (will slow down)\n"
           "  -js                output JavaScript (default)\n"
           "  -a                 disable memory allocation\n"
           "  -g                 debug mode\n"
@@ -127,6 +130,10 @@ static void doargs(int argc, char **argv)
                 partial = 1;
             } else if (0 == strcmp(arg, "-f")) {
                 opt = 1;
+            } else if (0 == strcmp(arg, "-z")) {
+                shrink = 1;
+            } else if (0 == strcmp(arg, "-s")) {
+                goto_mode = 1;
             } else if (0 == strcmp(arg, "-g")) {
                 debug = 1;
             } else if (0 == strcmp(arg, "-a")){
@@ -189,11 +196,11 @@ int main(int argc, char **argv)
     output_file = fopen("ob_temp.c", "w");
     if (output_file == NULL) { fatal_error(strerror(errno)); }
 
-    #if defined(LUAOT_USE_GOTOS)
-    println("#include \"luaot_header.c\"");
-    #elif defined(LUAOT_USE_SWITCHES)
-    println("#include \"trampoline_header.c\"");
-    #endif
+    if (goto_mode) {
+        println("#include \"luaot_header.c\"");
+    } else {
+        println("#include \"trampoline_header.c\"");
+    }
     printnl();
     print_functions(proto, "");
     for (int i = 0; i < 100; i++){
@@ -223,11 +230,11 @@ int main(int argc, char **argv)
     println("#define LUAOT_MODULE_NAME \"%s\"", module_name);
     println("#define LUAOT_LUAOPEN_NAME luaopen_%s", module_name);
     printnl();
-    #if defined(LUAOT_USE_GOTOS)
-    println("#include \"luaot_footer.c\"");
-    #elif defined(LUAOT_USE_SWITCHES)
-    println("#include \"trampoline_footer.c\"");
-    #endif 
+    if (goto_mode) {
+        println("#include \"luaot_footer.c\"");
+    } else {
+        println("#include \"trampoline_footer.c\"");
+    }
     for (int i = 0; i < 100; i++){
         if (strlen(secondaryFiles[i]) > 0){
             char str[12];
@@ -314,7 +321,9 @@ int main(int argc, char **argv)
         // Support more later
     }
     if (opt){
-        strcat(style, " -O3 -fPIC");
+        strcat(style, " -O3");
+    }else if (shrink){
+        strcat(style, " -Oz");
     }
     if (debug) {
         strcat(style, " -g");
@@ -866,13 +875,11 @@ void luaot_PrintOpcodeComment(Proto *f, int pc)
     print("\n");
 }
 
-#if defined(LUAOT_USE_GOTOS)
-#include "luaot_gotos.c"
-#elif defined(LUAOT_USE_SWITCHES)
-#include "luaot_switches.c"
-#else
-#error "Must define LUAOT_USE_GOTOS or LUAOT_USE_SWITCHES"
-#endif
+if (goto_mode) {
+    #include "luaot_gotos.c"
+} else {
+    #include "luaot_switches.c"
+}   
 
 static
 void create_functions(Proto *p)

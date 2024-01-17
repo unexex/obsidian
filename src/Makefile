@@ -6,11 +6,11 @@
 # Your platform. See PLATS for possible values.
 PLAT= guess
 
-WASMCC= emcc -std=c99 -fPIC
+WASMCC= emcc -std=gnu99 -fPIC
 WASMAR = emar rcs
 WASMRANLIB = emranlib
 
-CC= gcc -std=c99 -O3 -fPIC
+CC= gcc -std=gnu99 -O3 -fPIC
 CFLAGS= -O2 -Wall -Wextra $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
@@ -40,10 +40,10 @@ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix
 LUA_A=	liblua.a
 WASMLUA_A=	libwasmlua.a
 CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o
-LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o lalloc.o
+LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o lalloc.o ljs.o
 BASE_O= $(CORE_O) $(LIB_O) $(MYOBJS)
 CORE_WASM=	lapi.wasm lcode.wasm lctype.wasm ldebug.wasm ldo.wasm ldump.wasm lfunc.wasm lgc.wasm llex.wasm lmem.wasm lobject.wasm lopcodes.wasm lparser.wasm lstate.wasm lstring.wasm ltable.wasm ltm.wasm lundump.wasm lvm.wasm lzio.wasm
-LIB_WASM=	lauxlib.wasm lbaselib.wasm lcorolib.wasm ldblib.wasm liolib.wasm lmathlib.wasm loadlib.wasm loslib.wasm lstrlib.wasm ltablib.wasm lutf8lib.wasm linit.wasm lalloc.wasm
+LIB_WASM=	lauxlib.wasm lbaselib.wasm lcorolib.wasm ldblib.wasm liolib.wasm lmathlib.wasm loadlib.wasm loslib.wasm lstrlib.wasm ltablib.wasm lutf8lib.wasm linit.wasm lalloc.wasm ljs.wasm
 BASE_WASM= $(CORE_WASM) $(LIB_WASM) $(MYWASM)
 
 AOT_T=	ob
@@ -225,6 +225,7 @@ llex.o: llex.c lprefix.h lua.h luaconf.h lctype.h llimits.h ldebug.h \
  lstate.h lobject.h ltm.h lzio.h lmem.h ldo.h lgc.h llex.h lparser.h \
  lstring.h ltable.h
 lmathlib.o: lmathlib.c lprefix.h lua.h luaconf.h lauxlib.h lualib.h
+ljs.o: ljs.c lprefix.h lua.h luaconf.h ljs.h
 lmem.o: lmem.c lprefix.h lua.h luaconf.h ldebug.h lstate.h lobject.h \
  llimits.h ltm.h lzio.h lmem.h ldo.h lgc.h
 loadlib.o: loadlib.c lprefix.h lua.h luaconf.h lauxlib.h lualib.h
@@ -292,6 +293,8 @@ llex.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c llex.c -o llex.wasm
 lmathlib.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lmathlib.c -o lmathlib.wasm
+ljs.wasm:
+	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c ljs.c -o ljs.wasm
 lmem.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lmem.c -o lmem.wasm
 loadlib.wasm:
