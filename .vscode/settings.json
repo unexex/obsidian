@@ -3,6 +3,7 @@
         "lalloc.h": "c",
         "lstring.h": "c",
         "ltable.h": "c",
-        "lapi.h": "c"
+        "lapi.h": "c",
+        "complex": "c"
     }
 }

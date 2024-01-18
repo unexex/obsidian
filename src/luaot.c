@@ -40,7 +40,7 @@ static FILE * output_file = NULL;
 static int nfunctions = 0;
 static TString **tmname;
 
-int type = 4; // 0 = wasm, 1 = js, 2 = c, 3 = rust, 4 = auto
+int type = 4; // 0 = wasm, 2 = c, 4 = auto
 int opt = 0;
 int alloc = 0;
 int debug = 0;
@@ -61,16 +61,17 @@ void usage()
           "  -o name            output to file 'name'\n"
           "  -g                 debug mode\n"
           " Optimization options:\n"
-          //"  -p                 partial evaluator (JS only & experimental)\n"
+          //"  -p                 partial evaluator (experimental)\n"
           "  -f                 bulk-optimize source code (can also slow down)\n"
-          "  -z                 disable shrink optimize source code (reccomended)\n"
+          "  -z                 disable shrink optimize source code (recommended)\n"
           "  -a                 enable pool memory allocation (for memory-heavy scripts)\n"
           "  -t                 use gotos instead of switches in generated code (experimental)\n"
           " Language options:\n"
-          "  -js                output JavaScript\n"
-          "  -wasm              output WebAssembly (via Rust)\n"
-          "  -c                 output C\n"
-          "  -rust              output Rust\n",
+          //"  -js                output JavaScript\n"
+          "  -wasm              output WebAssembly (via Emscripten)\n"
+          "  -c                 output C\n",
+          //"  -rust              output Rust\n"
+          //"  -html              output HTML\n"
           program_name);
 }
 
@@ -128,15 +129,17 @@ static void doargs(int argc, char **argv)
             } else if (0 == strcmp(arg, "-v")) {
                 printf("%s\n", LUA_COPYRIGHT);
                 exit(0);
-            } else if (0 == strcmp(arg, "-js")) {
+            /*} else if (0 == strcmp(arg, "-js")) {
                 type = 1;
-            } else if (0 == strcmp(arg, "-c")) {
+            */} else if (0 == strcmp(arg, "-c")) {
                 type = 2;
-            } else if (0 == strcmp(arg, "-rust")) {
+            /*} else if (0 == strcmp(arg, "-rust")) {
                 type = 3;
-            } else if (0 == strcmp(arg, "-wasm")) {
+            */} else if (0 == strcmp(arg, "-wasm")) {
                 type = 0;
-            } else if (0 == strcmp(arg, "-p")) {
+            /*} else if (0 == strcmp(arg, "-html")) {
+                type = 5;
+            */} else if (0 == strcmp(arg, "-p")) {
                 partial = 1;
             } else if (0 == strcmp(arg, "-f")) {
                 opt = 1;
@@ -187,12 +190,8 @@ int main(int argc, char **argv)
     doargs(argc, argv);
     if (type == 4){ // Auto
         char *filext = strrchr(output_filename, '.');
-        if (filext && strcmp(filext, ".js") == 0){
-            type = 1;
-        }else if (filext && strcmp(filext, ".c") == 0){
+        if (filext && strcmp(filext, ".c") == 0){
             type = 2;
-        }else if (filext && strcmp(filext, ".rs") == 0){
-            type = 3;
         }else if (filext && strcmp(filext, ".wasm") == 0){
             type = 0;
         }else{
@@ -333,25 +332,16 @@ int main(int argc, char **argv)
     fclose(output_file);
 
     // Compile the generated C code
-    if (type == 1){
+    if (type == 0){
         if (system("emcc -v > /dev/null 2>&1") != 0) {
             fatal_error("emcc not found");
         }
     }
-    if (type == 3){
-        if (system("rustc -v > /dev/null 2>&1") != 0) {
-            fatal_error("rustc not found");
-        }
-    }
-    if (type == 0){
-        if (system("cargo -v > /dev/null 2>&1") != 0) {
-            fatal_error("cargo not found");
-        }
-    }
+    
 
     char command[1024];
     char style[20];
-    if (type == 1){ // JS
+    if (type == 0){ // WASM
         if (opt){
             strcat(style, " -O3");
         }else if (shrink){
@@ -364,9 +354,7 @@ int main(int argc, char **argv)
         char output_name[64];
         strncpy(output_name, output_filename, sizeof(output_name) - 1);
         output_name[sizeof(output_name) - 1] = '\0'; // Ensure null-termination
-       /* if (partial && type == 1){
-            strcat(output_name, ".unoptimized");
-        }*/
+        strcat(style, "-s WASM=1");
         sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_name);
 
         if (debug) printf("Compiling with command: %s\n", command);
@@ -374,26 +362,6 @@ int main(int argc, char **argv)
         if (!debug){
             remove("ob_temp.c");
         }
-
-        /*if (partial){
-            if (debug) printf("Optimizing %s -> %s", output_name, output_filename);
-            if (system("prepack --version > /dev/null 2>&1") != 0) {
-                fatal_error("prepack not found, use 'npm install -g unexex/prepack'");
-            }
-            char command2[1024];
-            sprintf(command2, "prepack %s --out %s", output_name, output_filename);
-
-            system(command2);
-            if (!debug){
-                remove(output_name);
-                strcat(output_name, ".mem");
-                if (access(output_name, F_OK) != -1) {
-                    remove(output_name);
-                }
-            }
-        }
-    */}else if (type == 0){ // Rust (maybe for WASM)
-
     }
     return 0;
 }
