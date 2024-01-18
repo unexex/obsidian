@@ -4,3 +4,4 @@
 luaot-trampoline
 ob
 test*
+*.js
