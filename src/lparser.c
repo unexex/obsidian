@@ -1090,6 +1090,29 @@ static void body (LexState *ls, expdesc *e, int ismethod, int line) {
   close_func(ls);
 }
 
+/*
+** Lambda implementation.
+** Shorthands lambda expressions into `function (...) return ... end`.
+** The '|' token was chosen because it's not commonly used as an unary operator in programming.
+** The '::' syntax looked more visually appealing than just a colon. It also plays along with common lambda tokens.
+*/
+static void lambdabody (LexState *ls, expdesc *e, int line) {
+  FuncState new_fs;
+  BlockCnt bl;
+  new_fs.f = addprototype(ls);
+  new_fs.f->linedefined = line;
+  open_func(ls, &new_fs, &bl);
+  checknext(ls, '|');
+  parlist(ls);
+  checknext(ls, '|');
+  checknext(ls, TK_ARROW);
+  expr(ls, e);
+  luaK_ret(&new_fs, luaK_exp2anyreg(&new_fs, e), 1);
+  new_fs.f->lastlinedefined = ls->linenumber;
+  codeclosure(ls, e);
+  close_func(ls);
+}
+
 
 static int explist (LexState *ls, expdesc *v) {
   /* explist -> expr { ',' expr } */
@@ -1279,6 +1302,10 @@ static void simpleexp (LexState *ls, expdesc *v) {
     case TK_FUNCTION: {
       luaX_next(ls);
       body(ls, v, 0, ls->linenumber);
+      return;
+    }
+    case '|': {
+      lambdabody(ls, v, ls->linenumber);
       return;
     }
     case TK___LINE__: {
