@@ -183,6 +183,10 @@ int main(int argc, char **argv)
     // Process input arguments
 
     doargs(argc, argv);
+    if (output_filename == NULL) {
+        usage();
+        exit(1);
+    }
     if (type == 4){ // Auto
         char *filext = strrchr(output_filename, '.');
         if (filext && strcmp(filext, ".c") == 0){
@@ -191,12 +195,6 @@ int main(int argc, char **argv)
             type = 0;
         }else{
             fatal_error("unknown file extension");
-        }
-    }
-    if (type == 2){
-        if (output_filename == NULL) {
-            usage();
-            exit(1);
         }
     }
     if (!module_name) {
