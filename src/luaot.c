@@ -170,11 +170,6 @@ static void doargs(int argc, char **argv)
             npos++;
         }
     }
-
-    if (output_filename == NULL) {
-        usage();
-        exit(1);
-    }
 }
 
 static char *get_module_name_from_filename(const char *);
@@ -198,7 +193,12 @@ int main(int argc, char **argv)
             fatal_error("unknown file extension");
         }
     }
-    
+    if (type == 2){
+        if (output_filename == NULL) {
+            usage();
+            exit(1);
+        }
+    }
     if (!module_name) {
         module_name = get_module_name_from_filename(output_filename);
     }
@@ -351,11 +351,11 @@ int main(int argc, char **argv)
             strcat(style, " -g");
         }
 
-        char output_name[64];
-        strncpy(output_name, output_filename, sizeof(output_name) - 1);
-        output_name[sizeof(output_name) - 1] = '\0'; // Ensure null-termination
-        strcat(style, "-s WASM=1");
-        sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_name);
+        if (output_filename)
+            printf("warning: ignoring -o option when compiling to WebAssembly\n");
+        strcat(style, " -s WASM=1");// -sEXPORTED_RUNTIME_METHODS=_main");
+    
+        sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c", style);
 
         if (debug) printf("Compiling with command: %s\n", command);
         system(command);
