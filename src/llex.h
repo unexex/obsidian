@@ -8,7 +8,9 @@
 #define llex_h
 
 #include <limits.h>
-
+#ifdef __cplusplus
+#include <vector>
+#endif
 #include "lobject.h"
 #include "lzio.h"
 
@@ -33,7 +35,7 @@ enum RESERVED {
   /* terminal symbols denoted by reserved words */
   TK_AUTO = FIRST_RESERVED, TK_BREAK, TK_CONTINUE,
   TK_DO, TK_ELSE, TK_FALSE, TK___FILE__, TK_FOR, TK_FUNCTION,
-  TK_GOTO, TK_IF, TK_IN, TK_LET, TK___LINE__, TK_LOCAL, TK_NIL,
+  TK_GOTO, TK_IF, TK_IN, TK_LET, TK_EXPORT, TK___LINE__, TK_LOCAL, TK_NIL,
   TK_RETURN, TK_TRUE, TK_VAR, TK_WHILE,
   /* other terminal symbols */
   TK_AND, TK_NOT, TK_OR, TK_POW,
@@ -78,6 +80,9 @@ typedef struct LexState {
   struct Dyndata *dyd;  /* dynamic structures used by the parser */
   TString *source;  /* current source name */
   TString *envn;  /* environment variable name */
+#ifdef __cplusplus
+  std::vector<TString*> export_symbols{}; /* export symbols */
+#endif
 } LexState;
 
 

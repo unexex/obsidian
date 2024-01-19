@@ -39,7 +39,7 @@ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix
 
 # What to install.
 TO_BIN= ob
-TO_INC= lauxlib.c luaot_switches.c liolib.c lopcodes.c lstate.c lobject.c luaot_header.c luaot_footer.c lmathlib.c ljs.h ljs.c loadlib.c lvm.c lfunc.c lstrlib.c lua.c linit.c lstring.c trampoline_header.c lundump.c lctype.c luac.c ltable.c trampoline_footer.c ldump.c luaot_gotos.c loslib.c lgc.c lzio.c ldblib.c lutf8lib.c lmem.c lcorolib.c lcode.c ltablib.c luaot.c lapi.c lbaselib.c ldebug.c lparser.c llex.c ltm.c ldo.c lmem.h llimits.h luaconf.h lzio.h lgc.h lualib.h lopnames.h ldebug.h lcode.h lapi.h ldo.h ljumptab.h llex.h ltm.h lparser.h lobject.h lstate.h lopcodes.h lauxlib.h lvm.h lstring.h lua.h lfunc.h lprefix.h ltable.h lctype.h lundump.h lalloc.h
+TO_INC= lauxlib.c luaot_switches.c liolib.c lopcodes.c lstate.c lobject.c luaot_header.c luaot_footer.c lmathlib.c ljs.h ljs.c loadlib.c lvm.c lfunc.c lstrlib.c lua.c linit.c lstring.c trampoline_header.c lundump.c lctype.c luac.c ltable.c trampoline_footer.c ldump.c luaot_gotos.c loslib.c lgc.c lzio.c ldblib.c lutf8lib.c lmem.c lcorolib.c lcode.c ltablib.c luaot.c lapi.c lbaselib.c ldebug.c lparser.cpp llex.c ltm.c ldo.c lmem.h llimits.h luaconf.h lzio.h lgc.h lualib.h lopnames.h ldebug.h lcode.h lapi.h ldo.h ljumptab.h llex.h ltm.h lparser.h lobject.h lstate.h lopcodes.h lauxlib.h lvm.h lstring.h lua.h lfunc.h lprefix.h ltable.h lctype.h lundump.h lalloc.h
 TO_LIB= libwasmlua.a liblua.a
 
 # Lua version and release.

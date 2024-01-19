@@ -6,12 +6,14 @@
 # Your platform. See PLATS for possible values.
 PLAT= guess
 
-WASMCC= emcc -std=gnu99 -fPIC
+WASMCC= emcc -std=gnu99 -fPIC -O3
+WASMCCPP= emcc -std=c++11 -fPIC -O3
 WASMAR = emar rcs
 WASMRANLIB = emranlib
 
 CC= gcc -std=gnu99 -O3 -fPIC
-CFLAGS= -O2 -Wall -Wextra $(SYSCFLAGS) $(MYCFLAGS)
+CCPP= g++ -std=c++11 -O3 -fPIC
+CFLAGS= -Wall -Wextra $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 
@@ -75,7 +77,7 @@ $(WASMLUA_A): $(BASE_WASM)
 	$(WASMRANLIB) $@
 
 $(AOT_T): $(AOT_O) $(LUA_A)
-	$(CC) -o $@  $(LDFLAGS) $(AOT_O) $(LUA_A) $(LIBS)
+	g++ -std=c++11 -O3 -o $@  $(LDFLAGS) $(AOT_O) $(LUA_A) $(LIBS)
 
 $(AOT2_T): $(AOT2_O) $(LUA_A)
 	$(CC) -o $@ $(LDFLAGS) $(AOT2_O) $(LUA_A) $(LIBS)
@@ -170,7 +172,7 @@ llex.o:
 	$(CC) $(CFLAGS) $(CMCFLAGS) -c llex.c
 
 lparser.o:
-	$(CC) $(CFLAGS) $(CMCFLAGS) -c lparser.c
+	$(CCPP) $(CFLAGS) $(CMCFLAGS) -c lparser.cpp
 
 lcode.o:
 	$(CC) $(CFLAGS) $(CMCFLAGS) -c lcode.c
@@ -179,7 +181,7 @@ llex.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c llex.c -o llex.wasm
 
 lparser.wasm:
-	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lparser.c -o lparser.wasm
+	$(WASMCCPP) $(CFLAGS) $(CMCFLAGS) -c lparser.cpp -o lparser.wasm
 
 lcode.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lcode.c -o lcode.wasm
@@ -234,7 +236,7 @@ lobject.o: lobject.c lprefix.h lua.h luaconf.h lctype.h llimits.h \
  lvm.h
 lopcodes.o: lopcodes.c lprefix.h lopcodes.h llimits.h lua.h luaconf.h
 loslib.o: loslib.c lprefix.h lua.h luaconf.h lauxlib.h lualib.h
-lparser.o: lparser.c lprefix.h lua.h luaconf.h lcode.h llex.h lobject.h \
+lparser.o: lparser.cpp lprefix.h lua.h luaconf.h lcode.h llex.h lobject.h \
  llimits.h lzio.h lmem.h lopcodes.h lparser.h ldebug.h lstate.h ltm.h \
  ldo.h lfunc.h lstring.h lgc.h ltable.h
 lstate.o: lstate.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h \
@@ -306,7 +308,7 @@ lopcodes.wasm:
 loslib.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c loslib.c -o loslib.wasm
 lparser.wasm:
-	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lparser.c -o lparser.wasm
+	$(WASMCCPP) $(CFLAGS) $(CMCFLAGS) -c lparser.cpp -o lparser.wasm
 lstate.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lstate.c -o lstate.wasm
 lstring.wasm:

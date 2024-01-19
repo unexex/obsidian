@@ -4,6 +4,9 @@
 ** See Copyright Notice in lua.h
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifndef lparser_h
 #define lparser_h
 
@@ -137,7 +140,7 @@ typedef struct Dyndata {
 
 
 /* control of blocks */
-struct BlockCnt;  /* defined in lparser.c */
+struct BlockCnt;  /* defined in lparser.cpp */
 
 
 /* state needed to generate code for a given function */
@@ -168,4 +171,7 @@ LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, Mbuffer *buff,
                                  Dyndata *dyd, const char *name, int firstchar);
 
 
+#endif
+#ifdef __cplusplus
+}
 #endif

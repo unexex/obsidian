@@ -1,5 +1,5 @@
 /*
-** $Id: lparser.c $
+** $Id: lparser.cpp $
 ** Lua Parser
 ** See Copyright Notice in lua.h
 */
@@ -7,12 +7,17 @@
 #define lparser_c
 #define LUA_CORE
 
-#include "lprefix.h"
 
 
 #include <limits.h>
 #include <string.h>
+#include <functional>
+#include <string>
+#include <vector>
+#include <stack>
 
+extern "C" {
+#include "lprefix.h"
 #include "lua.h"
 
 #include "lcode.h"
@@ -27,7 +32,7 @@
 #include "lstate.h"
 #include "lstring.h"
 #include "ltable.h"
-
+}
 
 
 /* maximum number of local variables per function (must be smaller
@@ -485,23 +490,6 @@ static void singlevaraux (FuncState *fs, TString *n, expdesc *var, int base) {
 }
 
 
-/*
-** Find a variable with the given name 'n', handling global variables
-** too.
-*/
-static void singlevar (LexState *ls, expdesc *var) {
-  TString *varname = str_checkname(ls);
-  FuncState *fs = ls->fs;
-  singlevaraux(fs, varname, var, 1);
-  if (var->k == VVOID) {  /* global name? */
-    expdesc key;
-    singlevaraux(fs, ls->envn, var, 1);  /* get environment variable */
-    lua_assert(var->k != VVOID);  /* this one must exist */
-    codestring(&key, varname);  /* key is variable name */
-    luaK_indexed(fs, var, &key);  /* env[varname] */
-  }
-}
-
 
 /*
 ** Adjust the number of results from an expression list 'e' with 'nexps'
@@ -526,6 +514,48 @@ static void adjust_assign (LexState *ls, int nvars, int nexps, expdesc *e) {
     luaK_reserveregs(fs, needed);  /* registers for extra values */
   else  /* adding 'needed' is actually a subtraction */
     fs->freereg += needed;  /* remove extra values */
+}
+
+
+/*
+** Find a variable with the given name 'n', handling global variables
+** too.
+*/
+static void singlevarinner(LexState *ls, expdesc *var, TString *varname) {
+  FuncState *fs = ls->fs;
+  singlevaraux(fs, varname, var, 1);
+  if (var->k == VVOID) { /* global name? */
+    expdesc key;
+    singlevaraux(fs, ls->envn, var, 1); /* get environment variable */
+    lua_assert(var->k != VVOID);        /* this one must exist */
+    codestring(&key, varname);          /* key is variable name */
+    luaK_indexed(fs, var, &key);        /* env[varname] */
+  }
+}
+
+static void singlevar (LexState *ls, expdesc *var) {
+  TString *varname = str_checkname(ls);
+  /*if (ls->t.token == TK_WALRUS) {
+    luaX_next(ls);
+    new_localvar(ls, varname);
+    expr(ls, var);
+    adjust_assign(ls, 1, 1, var);
+    adjustlocalvars(ls, 1);
+    return;
+  }*/
+  singlevarinner(ls, var, varname);
+}
+
+static void singlevar (LexState *ls, expdesc *var, TString *varname) {
+  /*if (ls->t.token == TK_WALRUS) {
+    luaX_next(ls);
+    new_localvar(ls, varname);
+    expr(ls, var);
+    adjust_assign(ls, 1, 1, var);
+    adjustlocalvars(ls, 1);
+    return;
+  }*/
+  singlevarinner(ls, var, varname);
 }
 
 
@@ -851,6 +881,20 @@ static void statlist (LexState *ls) {
   }
 }
 
+static bool statlistget (LexState *ls) {
+  /* statlistget -> { stat [';'] } */
+  bool ret = false;
+  while (!block_follow(ls)) {
+    ret = (ls->t.token == TK_RETURN);
+#if defined(LUAI_ASSERT)
+    const auto levels = ls->L->nCcalls;
+#endif
+    statement(ls);
+    lua_assert(levels == ls->L->nCcalls);
+    if (ret) break;
+  }
+  return ret;
+}
 
 static void fieldsel (LexState *ls, expdesc *v) {
   /* fieldsel -> ['.' | ':'] NAME */
@@ -2029,7 +2073,16 @@ static void localfunc (LexState *ls) {
   /* debug information will only see the variable after this point! */
   localdebuginfo(fs, fvar)->startpc = fs->pc;
 }
-
+static void exportfunc(LexState *ls, TString *name) {
+  expdesc b;
+  FuncState *fs = ls->fs;
+  int fvar = fs->nactvar;  /* function's variable index */
+  new_localvar(ls, name);  /* new local variable */
+  adjustlocalvars(ls, 1);  /* enter its scope */
+  body(ls, &b, 0, ls->linenumber);  /* function created in next register */
+  /* debug information will only see the variable after this point! */
+  localdebuginfo(fs, fvar)->startpc = fs->pc;
+}
 
 static int getlocalattribute (LexState *ls) {
   /* ATTRIB -> ['<' Name '>'] */
@@ -2092,6 +2145,55 @@ static void localstat (LexState *ls) {
     fs->nactvar++;  /* but count it */
   }
   else {
+    adjust_assign(ls, nvars, nexps, &e);
+    adjustlocalvars(ls, nvars);
+  }
+  checktoclose(fs, toclose);
+}
+
+static void exportstat(LexState *ls, TString *name) {
+  /* stat -> LOCAL NAME ATTRIB { ',' NAME ATTRIB } ['=' explist] */
+  /*if (ls->t.token == '{') {
+    destructuring(ls);
+    return;
+  }
+  if (ls->t.token == '[') {
+    arraydestructuring(ls);
+    return;
+  }*/
+  FuncState *fs = ls->fs;
+  int toclose = -1; /* index of to-be-closed variable (if any) */
+  Vardesc *var;     /* last variable */
+  int vidx, kind;   /* index and kind of last variable */
+  int nvars = 0;
+  int nexps;
+  expdesc e;
+  do {
+    vidx = new_localvar(ls, name);
+    kind = getlocalattribute(ls);
+    getlocalvardesc(fs, vidx)->vd.kind = kind;
+    if (kind == RDKTOCLOSE) { /* to-be-closed? */
+      if (toclose != -1)      /* one already present? */
+        luaK_semerror(ls, "multiple to-be-closed variables in local list");
+      toclose = fs->nactvar + nvars;
+    }
+    nvars++;
+    optParamType(ls);
+  } while (testnext(ls, ','));
+  if (testnext(ls, '='))
+    nexps = explist(ls, &e);
+  else {
+    e.k = VVOID;
+    nexps = 0;
+  }
+  var = getlocalvardesc(fs, vidx);       /* get last variable */
+  if (nvars == nexps &&                  /* no adjustments? */
+      var->vd.kind == RDKCONST &&        /* last variable is const? */
+      luaK_exp2const(fs, &e, &var->k)) { /* compile-time constant? */
+    var->vd.kind = RDKCTC;          /* variable is a compile-time constant */
+    adjustlocalvars(ls, nvars - 1); /* exclude last variable */
+    fs->nactvar++;                  /* but count it */
+  } else {
     adjust_assign(ls, nvars, nexps, &e);
     adjustlocalvars(ls, nvars);
   }
@@ -2337,6 +2439,24 @@ static void statement (LexState *ls) {
       funcstat(ls, line);
       break;
     }
+    case TK_EXPORT: {
+      if (ls->fs->bl->previous)
+        luaX_syntaxerror(ls, "Attempt to use 'export' outside of global scope");
+      luaX_next(ls);  /* skip EXPORT */
+      TString *name = str_checkname(ls);
+      
+      if (testnext(ls, TK_FUNCTION)) {
+        exportfunc(ls, name);
+        ls->export_symbols.emplace_back((name));
+      /*} else if (testnext(ls, TK_CLASS)) {
+        localclass(ls);
+        ls->export_symbols.emplace_back((name));
+      */} else {
+        exportstat(ls, name);
+        ls->export_symbols.emplace_back((name));
+      }
+      break;
+    }
     case TK_AUTO: {  /* stat -> localstat */
       luaX_next(ls);  /* skip LOCAL */
       if (testnext(ls, TK_FUNCTION))  /* local function? */
@@ -2416,20 +2536,70 @@ static void statement (LexState *ls) {
 ** compiles the main function, which is a regular vararg function with an
 ** upvalue named LUA_ENV
 */
+static void newtable (LexState *ls, expdesc *v, const std::function<bool(expdesc *key, expdesc *val)>& gen) {
+  FuncState* fs = ls->fs;
+  int pc = luaK_codeABC(fs, OP_NEWTABLE, 0, 0, 0);
+  ConsControl cc;
+  luaK_code(fs, 0);  /* space for extra arg. */
+  cc.na = cc.nh = cc.tostore = 0;
+  cc.t = v;
+  init_exp(v, VNONRELOC, fs->freereg);  /* table will be at stack top */
+  luaK_reserveregs(fs, 1);
+  init_exp(&cc.v, VVOID, 0);
+  while (true) {
+    closelistfield(fs, &cc);
+    int reg = ls->fs->freereg;
+    expdesc tab, key, val;
+    if (!gen(&key, &val))
+      break;
+    luaK_exp2val(ls->fs, &key);
+    cc.nh++;
+    tab = *cc.t;
+    luaK_indexed(fs, &tab, &key);
+    luaK_storevar(fs, &tab, &val);
+    fs->freereg = reg;
+  }
+  lastlistfield(fs, &cc);
+  luaK_settablesize(fs, pc, v->u.info, cc.na, cc.nh);
+}
 static void mainfunc (LexState *ls, FuncState *fs) {
   BlockCnt bl;
   Upvaldesc *env;
   open_func(ls, fs, &bl);
-  setvararg(fs, 0);  /* main function is always declared vararg */
-  env = allocupvalue(fs);  /* ...set environment upvalue */
+  setvararg(fs, 0);       /* main function is always declared vararg */
+  env = allocupvalue(fs); /* ...set environment upvalue */
   env->instack = 1;
   env->idx = 0;
   env->kind = VDKREG;
   env->name = ls->envn;
   luaC_objbarrier(ls->L, fs->f, env->name);
-  luaX_next(ls);  /* read first token */
-  statlist(ls);  /* parse main body */
+  //builtinoperators(ls); /* import operators */
+  luaX_next(ls); /* read first token */
+
+  const bool ret = statlistget(ls);  /* parse main body */
   check(ls, TK_EOS);
+  /* export */
+  if (!ls->export_symbols.empty()) {
+    if (ret) {
+      luaX_syntaxerror(ls, "'export' used but main body already returns something");
+    }
+    enterlevel(ls);
+    /* generate return statement */
+    size_t i = 0;
+    expdesc t;
+    newtable(ls, &t, [ls, &i](expdesc *k, expdesc *v) {
+      if (i == ls->export_symbols.size())
+        return false;
+      codestring(k, (ls->export_symbols.at(i)));
+      singlevar(ls, v, (ls->export_symbols.at(i)));
+      ++i;
+      return true;
+    });
+    luaK_ret(ls->fs, luaK_exp2anyreg(fs, &t), 1);
+    
+    leavelevel(ls);
+  }
+  
   close_func(ls);
 }
 
