@@ -44,9 +44,10 @@ int type = 4; // 0 = wasm, 2 = c, 4 = auto
 int opt = 0;
 int alloc = 0;
 int debug = 0;
-int partial = 0;
+//int partial = 0;
 int shrink = 1;
 int goto_mode = 0;
+int closureopt = 0;
 char secondaryFiles[100][20];
 
 static
@@ -62,9 +63,10 @@ void usage()
           "  -g                 debug mode\n"
           " Optimization options:\n"
           //"  -p                 partial evaluator (experimental)\n"
-          "  -f                 bulk-optimize source code (can also slow down)\n"
-          "  -z                 disable shrink optimize source code (recommended)\n"
+          "  -f                 apply -O3 to emscripten\n"
+          "  -z                 disable shrink optimization for WASM\n"
           "  -a                 enable pool memory allocation (for memory-heavy scripts)\n"
+          "  -p                 run production optimizations\n"
           "  -t                 use gotos instead of switches in generated code (experimental)\n"
           " Language options:\n"
           //"  -js                output JavaScript\n"
@@ -140,10 +142,10 @@ static void doargs(int argc, char **argv)
             /*} else if (0 == strcmp(arg, "-html")) {
                 type = 5;
             */} else if (0 == strcmp(arg, "-p")) {
-                partial = 1;
+                closureopt = 0;
             } else if (0 == strcmp(arg, "-f")) {
                 opt = 1;
-            } else if (0 == strcmp(arg, "-z")) {
+            }  else if (0 == strcmp(arg, "-z")) {
                 shrink = 0;
             } else if (0 == strcmp(arg, "-t")) {
                 goto_mode = 1;
@@ -338,12 +340,15 @@ int main(int argc, char **argv)
     
 
     char command[1024];
-    char style[20];
+    char style[200] = "";
     if (type == 0){ // WASM
         if (opt){
             strcat(style, " -O3");
         }else if (shrink){
             strcat(style, " -Oz");
+        }
+        if (closureopt){
+            strcat(style, " --closure 1 -sMODULARIZE");
         }
         if (debug) {
             strcat(style, " -g");
