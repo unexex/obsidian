@@ -40,11 +40,17 @@ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix
 LUA_A=	liblua.a
 WASMLUA_A=	libwasmlua.a
 CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o
-LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o lalloc.o ljs.o
+LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o lalloc.o ljs.o 
 BASE_O= $(CORE_O) $(LIB_O) $(MYOBJS)
 CORE_WASM=	lapi.wasm lcode.wasm lctype.wasm ldebug.wasm ldo.wasm ldump.wasm lfunc.wasm lgc.wasm llex.wasm lmem.wasm lobject.wasm lopcodes.wasm lparser.wasm lstate.wasm lstring.wasm ltable.wasm ltm.wasm lundump.wasm lzio.wasm #lvm.wasm
-LIB_WASM=	lauxlib.wasm lbaselib.wasm lcorolib.wasm ldblib.wasm liolib.wasm lmathlib.wasm loadlib.wasm loslib.wasm lstrlib.wasm ltablib.wasm lutf8lib.wasm linit.wasm lalloc.wasm ljs.wasm
+LIB_WASM=	lauxlib.wasm lbaselib.wasm lcorolib.wasm ldblib.wasm liolib.wasm lmathlib.wasm loadlib.wasm loslib.wasm lstrlib.wasm ltablib.wasm lutf8lib.wasm linit.wasm lalloc.wasm ljs.wasm #lpy.wasm py.wasm Python is not on client
 BASE_WASM= $(CORE_WASM) $(LIB_WASM) $(MYWASM)
+
+# add lpy.o py.o  if -PY
+ifeq ($(PY),1)
+BASE_O+= lpy.o py.o
+CFLAGS+= -DPY ${shell python3-config --cflags}
+endif
 
 AOT_T=	ob
 AOT_O=	luaot.o
@@ -225,6 +231,12 @@ llex.o: llex.c lprefix.h lua.h luaconf.h lctype.h llimits.h ldebug.h \
  lstate.h lobject.h ltm.h lzio.h lmem.h ldo.h lgc.h llex.h lparser.h \
  lstring.h ltable.h
 lmathlib.o: lmathlib.c lprefix.h lua.h luaconf.h lauxlib.h lualib.h
+lpy.o: lpy.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h \
+ lobject.h ltm.h lzio.h lmem.h lcode.h llex.h lopcodes.h lparser.h \
+ ldebug.h ldo.h lfunc.h lstring.h lgc.h ltable.h lvm.h
+py.o: py.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h lobject.h \
+ ltm.h lzio.h lmem.h lcode.h llex.h lopcodes.h lparser.h ldebug.h ldo.h \
+ lfunc.h lstring.h lgc.h ltable.h lvm.h
 ljs.o: ljs.c lprefix.h lua.h luaconf.h ljs.h
 lmem.o: lmem.c lprefix.h lua.h luaconf.h ldebug.h lstate.h lobject.h \
  llimits.h ltm.h lzio.h lmem.h ldo.h lgc.h
@@ -293,6 +305,10 @@ llex.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c llex.c -o llex.wasm
 lmathlib.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lmathlib.c -o lmathlib.wasm
+lpy.wasm:
+	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lpy.c -o lpy.wasm
+py.wasm:
+	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c py.c -o py.wasm
 ljs.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c ljs.c -o ljs.wasm
 lmem.wasm:

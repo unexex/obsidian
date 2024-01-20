@@ -44,8 +44,15 @@ LUAMOD_API int (luaopen_debug) (lua_State *L);
 #define LUA_LOADLIBNAME	"package"
 LUAMOD_API int (luaopen_package) (lua_State *L);
 
+#ifdef __EMSCRIPTEN__
 #define LUA_JSNAME "js"
 LUAMOD_API int (luaopen_js) (lua_State *L);
+#else
+#ifdef PY
+#define LUA_PYNAME "py"
+LUAMOD_API int (luaopen_python) (lua_State *L);
+#endif
+#endif
 
 /* open all previous libraries */
 LUALIB_API void (luaL_openlibs) (lua_State *L);
