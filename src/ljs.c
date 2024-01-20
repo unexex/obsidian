@@ -24,8 +24,10 @@
 
 static int js_eval (lua_State *L) {
     const char* js = luaL_checkstring(L, 1);
-    int ok = runJSString(js);
-    lua_pushboolean(L, ok == 0);
+    EM_JS(void, returnFunc, (lua_State *L), {
+      eval(UTF8ToString(js));
+    })
+      
     return 1;
 }
 
@@ -36,7 +38,7 @@ static const luaL_Reg jslib[] = {
 
 
 /*
-** Open math library
+** Open JS library
 */
 LUAMOD_API int luaopen_js (lua_State *L) {
   luaL_newlib(L, jslib);
