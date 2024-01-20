@@ -22,11 +22,13 @@
 #include "lualib.h"
 #include "ljs.h"
 
+EM_JS(void, returnFunc, (const char* js), {
+    eval(UTF8ToString(js));
+})
+
 static int js_eval (lua_State *L) {
     const char* js = luaL_checkstring(L, 1);
-    EM_JS(void, returnFunc, (lua_State *L), {
-      eval(UTF8ToString(js));
-    })
+    returnFunc(js);
       
     return 1;
 }
