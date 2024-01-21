@@ -234,10 +234,11 @@ LUALIB_API void luaL_where (lua_State *L, int level) {
 LUALIB_API int luaL_error (lua_State *L, const char *fmt, ...) {
   va_list argp;
   va_start(argp, fmt);
-  luaL_where(L, 1);
+  lua_pushfstring(L, "\033[31m");  // start red color
   lua_pushvfstring(L, fmt, argp);
   va_end(argp);
-  lua_concat(L, 2);
+  lua_pushfstring(L, "\033[0m");  // reset color
+  lua_concat(L, 3);  // concatenate the strings
   return lua_error(L);
 }
 

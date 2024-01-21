@@ -267,7 +267,7 @@ int main(int argc, char **argv)
             sprintf(str, "%d", i);
 
             println("int luaopen_submodule_%s(lua_State *L) {", str);
-            println("    int ok = luaL_loadbuffer(L, LUAOT_MODULE_SOURCE_CODE_%s, sizeof(LUAOT_MODULE_SOURCE_CODE_%s)-1, \"Obsidian compiled module \\\"\"LUAOT_MODULE_NAME\"\\\"\");", str, str);
+            println("    int ok = luaL_loadbuffer(L, LUAOT_MODULE_SOURCE_CODE_%s, sizeof(LUAOT_MODULE_SOURCE_CODE_%s)-1, \"compiled module \\\"\"LUAOT_MODULE_NAME\"\\\"\");", str, str);
             println("    switch (ok) {" );
             println("      case LUA_OK:" );
             println("        /* No errors */" );
