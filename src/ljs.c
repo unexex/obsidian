@@ -116,8 +116,8 @@ static int js_run (lua_State *L) {
   const char* argv[argc];
 
   void* ptr = EM_ASM_PTR({
-    return eval("const latest = "+UTF8ToString(stacknew)+";\n const stack = ["+UTF8ToString(stack)+"];\n"+UTF8ToString(js));
-  }, luaL_checkstring(L, 1), argv, argc);
+    return eval("(function() { const latest = "+UTF8ToString($3)+";\n const stack = ["+UTF8ToString($4)+"];\n"+UTF8ToString($0)+" })()");
+  }, luaL_checkstring(L, 1), argv, argc, stack, stacknew);
 
   lua_pushlightuserdata(L, ptr);
   return 1;
@@ -125,19 +125,19 @@ static int js_run (lua_State *L) {
 
 static int toString(lua_State *L) {
   void *ptr = lua_touserdata(L, 1);
-  lua_pushstring(L, &ptr);
+  lua_pushstring(L, (char*)ptr);
   return 1;
 }
 
 static int toNumber(lua_State *L) {
   void *ptr = lua_touserdata(L, 1);
-  lua_pushnumber(L, &ptr);
+  lua_pushnumber(L, *(double *)ptr);
   return 1;
 }
 
 static int toBoolean(lua_State *L) {
   void *ptr = lua_touserdata(L, 1);
-  lua_pushboolean(L, &ptr);
+  lua_pushboolean(L, *(int *)ptr);
   return 1;
 }
 
@@ -150,9 +150,9 @@ static const luaL_Reg jslib[] = {
 
   /* Raw */
   {"run",   js_run},
-  {"toString",   toString},
-  {"toNumber",   toNumber},
-  {"toBoolean",   toBoolean},
+  {"tostring",   toString},
+  {"tonumber",   toNumber},
+  {"toboolean",   toBoolean},
 
   {NULL, NULL}
 };
