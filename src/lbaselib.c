@@ -26,7 +26,7 @@ static int luaB_print (lua_State *L) {
   int i;
   for (i = 1; i <= n; i++) {  /* for each argument */
     size_t l;
-    const char *s = luaL_tolstring(L, i, &l);  /* convert it to string */
+    const char *s = luaL_tolcolorstring(L, i, &l);  /* convert it to string */
     if (i > 1)  /* not the first element? */
       lua_writestring("\t", 1);  /* add a tab before it */
     lua_writestring(s, l);  /* print it */
@@ -502,6 +502,12 @@ static int luaB_tostring (lua_State *L) {
   return 1;
 }
 
+static int luaB_tocolorstring (lua_State *L) {
+  luaL_checkany(L, 1);
+  luaL_tolcolorstring(L, 1, NULL);
+  return 1;
+}
+
 
 static const luaL_Reg base_funcs[] = {
   {"assert", luaB_assert},
@@ -525,6 +531,7 @@ static const luaL_Reg base_funcs[] = {
   {"setmetatable", luaB_setmetatable},
   {"tonumber", luaB_tonumber},
   {"tostring", luaB_tostring},
+  {"tocolorstring", luaB_tostring},
   {"type", luaB_type},
   {"xpcall", luaB_xpcall},
   /* placeholders */

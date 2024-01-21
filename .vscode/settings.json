@@ -4,6 +4,7 @@
         "lstring.h": "c",
         "ltable.h": "c",
         "lapi.h": "c",
-        "complex": "c"
+        "complex": "c",
+        "lauxlib.h": "c"
     }
 }
