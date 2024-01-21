@@ -123,6 +123,24 @@ static int js_run (lua_State *L) {
   return 1;
 }
 
+static int toString(lua_State *L) {
+  void *ptr = lua_touserdata(L, 1);
+  lua_pushstring(L, &ptr);
+  return 1;
+}
+
+static int toNumber(lua_State *L) {
+  void *ptr = lua_touserdata(L, 1);
+  lua_pushnumber(L, &ptr);
+  return 1;
+}
+
+static int toBoolean(lua_State *L) {
+  void *ptr = lua_touserdata(L, 1);
+  lua_pushboolean(L, &ptr);
+  return 1;
+}
+
 static const luaL_Reg jslib[] = {
   /* Stack based */
   {"eval",   js_eval},
@@ -132,6 +150,9 @@ static const luaL_Reg jslib[] = {
 
   /* Raw */
   {"run",   js_run},
+  {"toString",   toString},
+  {"toNumber",   toNumber},
+  {"toBoolean",   toBoolean},
 
   {NULL, NULL}
 };
