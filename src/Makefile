@@ -46,10 +46,17 @@ CORE_WASM=	lapi.wasm lcode.wasm lctype.wasm ldebug.wasm ldo.wasm ldump.wasm lfun
 LIB_WASM=	lauxlib.wasm lbaselib.wasm lcorolib.wasm ldblib.wasm liolib.wasm lmathlib.wasm loadlib.wasm loslib.wasm lstrlib.wasm ltablib.wasm lutf8lib.wasm linit.wasm lalloc.wasm ljs.wasm #lpy.wasm py.wasm Python is not on client
 BASE_WASM= $(CORE_WASM) $(LIB_WASM) $(MYWASM)
 
-# add lpy.o py.o  if -PY
+
+PY=1 # Disable this for no Python support
 ifeq ($(PY),1)
 BASE_O+= lpy.o py.o
 CFLAGS+= -DPY ${shell python3-config --cflags}
+endif
+
+FFI=1 # Disable this for no Python support
+ifeq ($(FFI),1)
+BASE_O+= call.o ctype.o ffi.o
+CFLAGS+= -DFFI
 endif
 
 AOT_T=	ob
@@ -237,6 +244,13 @@ lpy.o: lpy.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h \
 py.o: py.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h lobject.h \
  ltm.h lzio.h lmem.h lcode.h llex.h lopcodes.h lparser.h ldebug.h ldo.h \
  lfunc.h lstring.h lgc.h ltable.h lvm.h
+call.o: call.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h \
+ lobject.h ltm.h lzio.h lmem.h lcode.h llex.h lopcodes.h lparser.h \
+ ldebug.h ldo.h lfunc.h lstring.h lgc.h ltable.h lvm.h
+ctype.o: ctype.c lprefix.h lctype.h lua.h luaconf.h llimits.h
+ffi.o: ffi.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h \
+ lobject.h ltm.h lzio.h lmem.h lcode.h llex.h lopcodes.h lparser.h \
+ ldebug.h ldo.h lfunc.h lstring.h lgc.h ltable.h lvm.h
 ljs.o: ljs.c lprefix.h lua.h luaconf.h ljs.h
 lmem.o: lmem.c lprefix.h lua.h luaconf.h ldebug.h lstate.h lobject.h \
  llimits.h ltm.h lzio.h lmem.h ldo.h lgc.h

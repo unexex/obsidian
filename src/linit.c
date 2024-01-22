@@ -50,16 +50,22 @@ static const luaL_Reg loadedlibs[] = {
   {LUA_MATHLIBNAME, luaopen_math},
   {LUA_UTF8LIBNAME, luaopen_utf8},
   {LUA_DBLIBNAME, luaopen_debug},
+  {NULL, NULL}
+};
+
+static const luaL_Reg requireablelibs[] = {
   #ifdef __EMSCRIPTEN__
   {LUA_JSNAME, luaopen_js},
   #else
   #ifdef PY
   {LUA_PYNAME, luaopen_python},
   #endif
+  #ifdef FFI
+  {LUA_FFINAME, luaopen_ffi},
+  #endif
   #endif
   {NULL, NULL}
 };
-
 
 LUALIB_API void luaL_openlibs (lua_State *L) {
   const luaL_Reg *lib;
@@ -67,6 +73,13 @@ LUALIB_API void luaL_openlibs (lua_State *L) {
   for (lib = loadedlibs; lib->func; lib++) {
     luaL_requiref(L, lib->name, lib->func, 1);
     lua_pop(L, 1);  /* remove lib */
+  }
+
+  for (lib = requireablelibs; lib->func; lib++) {
+    luaL_getsubtable(L, LUA_REGISTRYINDEX, LUA_PRELOAD_TABLE);
+    lua_pushcfunction(L, lib->func);
+    lua_setfield(L, -2, lib->name);
+    lua_pop(L, 1);  /* remove PRELOAD table */
   }
 }
 

@@ -52,6 +52,10 @@ LUAMOD_API int (luaopen_js) (lua_State *L);
 #define LUA_PYNAME "py"
 LUAMOD_API int (luaopen_python) (lua_State *L);
 #endif
+#ifdef FFI
+#define LUA_FFINAME "ffi"   
+LUAMOD_API int (luaopen_ffi) (lua_State *L);
+#endif
 #endif
 
 /* open all previous libraries */
