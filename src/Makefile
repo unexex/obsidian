@@ -39,11 +39,11 @@ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix
 
 LUA_A=	liblua.a
 WASMLUA_A=	libwasmlua.a
-CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o
-LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o lalloc.o #ljs.o 
+CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o luamem.o
+LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o lalloc.o lmemlib.o #ljs.o 
 BASE_O= $(CORE_O) $(LIB_O) $(MYOBJS)
-CORE_WASM=	lapi.wasm lcode.wasm lctype.wasm ldebug.wasm ldo.wasm ldump.wasm lfunc.wasm lgc.wasm llex.wasm lmem.wasm lobject.wasm lopcodes.wasm lparser.wasm lstate.wasm lstring.wasm ltable.wasm ltm.wasm lundump.wasm lzio.wasm #lvm.wasm
-LIB_WASM=	lauxlib.wasm lbaselib.wasm lcorolib.wasm ldblib.wasm liolib.wasm lmathlib.wasm loadlib.wasm loslib.wasm lstrlib.wasm ltablib.wasm lutf8lib.wasm linit.wasm lalloc.wasm ljs.wasm #lpy.wasm py.wasm Python is not on client
+CORE_WASM=	lapi.wasm lcode.wasm lctype.wasm ldebug.wasm ldo.wasm ldump.wasm lfunc.wasm lgc.wasm llex.wasm lmem.wasm lobject.wasm lopcodes.wasm lparser.wasm lstate.wasm lstring.wasm ltable.wasm ltm.wasm lundump.wasm lzio.wasm luamem.wasm #lvm.wasm
+LIB_WASM=	lauxlib.wasm lbaselib.wasm lcorolib.wasm ldblib.wasm liolib.wasm lmathlib.wasm loadlib.wasm loslib.wasm lstrlib.wasm ltablib.wasm lutf8lib.wasm linit.wasm lalloc.wasm ljs.wasm lmemlib.wasm #lpy.wasm py.wasm Python is not on client
 BASE_WASM= $(CORE_WASM) $(LIB_WASM) $(MYWASM)
 
 
@@ -53,7 +53,7 @@ BASE_O+= lpy.o py.o
 CFLAGS+= -DPY ${shell python3-config --cflags}
 endif
 
-FFI=1 # Disable this for no Python support
+FFI=1 # Disable this for no FFI support
 ifeq ($(FFI),1)
 BASE_O+= call.o ctype.o ffi.o
 CFLAGS+= -DFFI
@@ -287,6 +287,8 @@ lvm.o: lvm.c lprefix.h lua.h luaconf.h ldebug.h lstate.h lobject.h \
 lzio.o: lzio.c lprefix.h lua.h luaconf.h llimits.h lmem.h lstate.h \
  lobject.h ltm.h lzio.h
 lalloc.o: lalloc.c lalloc.h lua.h lauxlib.h
+lmemlib.o: lmemlib.c lprefix.h lua.h luaconf.h lauxlib.h lualib.h luamem.h
+luamem.o: luamem.c lprefix.h lua.h luaconf.h lauxlib.h lualib.h luamem.h
 lapi.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lapi.c -o lapi.wasm
 lauxlib.wasm:
@@ -363,5 +365,8 @@ lzio.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lzio.c -o lzio.wasm
 lalloc.wasm:
 	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lalloc.c -o lalloc.wasm
-
+luamem.wasm:
+	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c luamem.c -o luamem.wasm
+lmemlib.wasm:
+	$(WASMCC) $(CFLAGS) $(CMCFLAGS) -c lmemlib.c -o lmemlib.wasm
 # (end of Makefile)

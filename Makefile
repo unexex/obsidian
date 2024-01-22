@@ -39,7 +39,11 @@ PLATS= guess aix bsd c89 freebsd generic linux linux-readline macosx mingw posix
 
 # What to install.
 TO_BIN= ob
-TO_INC= lauxlib.c luaot_switches.c liolib.c lopcodes.c lstate.c lobject.c luaot_header.c luaot_footer.c lmathlib.c ljs.h ljs.c loadlib.c lvm.c lfunc.c lstrlib.c lua.c linit.c lstring.c trampoline_header.c lundump.c lctype.c luac.c ltable.c trampoline_footer.c ldump.c luaot_gotos.c loslib.c lgc.c lzio.c ldblib.c lutf8lib.c lmem.c lcorolib.c lcode.c ltablib.c luaot.c lapi.c lbaselib.c ldebug.c lparser.c llex.c ltm.c ldo.c lmem.h llimits.h luaconf.h lzio.h lgc.h lualib.h lopnames.h ldebug.h lcode.h lapi.h ldo.h ljumptab.h llex.h ltm.h lparser.h lobject.h lstate.h lopcodes.h lauxlib.h lvm.h lstring.h lua.h lfunc.h lprefix.h ltable.h lctype.h lundump.h lalloc.h
+#import glob
+#h_files = glob.glob('*.h')
+#c_files = glob.glob('*.c')
+#print(' '.join(h_files + c_files))
+TO_INC= lmem.h llimits.h ljs.h luaconf.h lzio.h lgc.h lualib.h lopnames.h ldebug.h lcode.h lapi.h call_x64.h ldo.h ljumptab.h llex.h call_x64win.h luamem.h ltm.h lparser.h call_x86.h lobject.h lstate.h lopcodes.h lauxlib.h lvm.h py.h call_arm.h lalloc.h lstring.h lua.h lfunc.h lpy.h lprefix.h ltable.h lctype.h ffi.h lundump.h lauxlib.c luaot_switches.c liolib.c lopcodes.c lstate.c lobject.c lalloc.c luaot_header.c luaot_footer.c py.c lmathlib.c ctype.c loadlib.c lvm.c lfunc.c lstrlib.c lpy.c lua.c linit.c lstring.c trampoline_header.c lundump.c ffi.c lctype.c luac.c ltable.c trampoline_footer.c ldump.c luaot_gotos.c lmemlib.c loslib.c lgc.c lzio.c ldblib.c lutf8lib.c lmem.c ljs.c lcorolib.c lcode.c ltablib.c luaot.c lapi.c lbaselib.c ldebug.c lparser.c call.c llex.c ltm.c luamem.c ldo.c
 TO_LIB= libwasmlua.a liblua.a
 
 # Lua version and release.

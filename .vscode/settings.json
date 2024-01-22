@@ -5,6 +5,9 @@
         "ltable.h": "c",
         "lapi.h": "c",
         "complex": "c",
-        "lauxlib.h": "c"
+        "lauxlib.h": "c",
+        "lualib.h": "c",
+        "luamem.h": "c",
+        "lua.h": "c"
     }
 }

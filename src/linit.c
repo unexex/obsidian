@@ -54,6 +54,7 @@ static const luaL_Reg loadedlibs[] = {
 };
 
 static const luaL_Reg requireablelibs[] = {
+  {LUA_MEMLIBNAME, luaopen_memory},
   #ifdef __EMSCRIPTEN__
   {LUA_JSNAME, luaopen_js},
   #else
