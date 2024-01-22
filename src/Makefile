@@ -163,11 +163,12 @@ Darwin macos macosx:
 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX"
 
 mingw:
-	@echo "WINDOWS & MingW are not supported yet"
-	$(MAKE) "WASMLUA_A=wasmlua54.dll" "LUA_A=lua54.dll" "LUA_T=lua.exe" \
+	$(MAKE) "WASMLUA_A=wasmlua54.a" "LUA_A=lua54.dll" "LUA_T=lua.exe" \
 	"AR=$(CC) -shared -o" "RANLIB=strip --strip-unneeded" \
 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=-s" lua.exe
 	$(MAKE) "LUAC_T=luac.exe" luac.exe
+	$(MAKE) "AOT2_T=luaot-trampoline.exe" luaot-trampoline.exe
+	$(MAKE) "AOT_T=ob.exe" ob.exe
 
 posix:
 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_POSIX"
