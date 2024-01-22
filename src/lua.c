@@ -579,7 +579,7 @@ static void l_print (lua_State *L) {
 
 /*
 ** Do the REPL: repeatedly read (load) a line, evaluate (call) it, and
-** print any results.
+** print any results. 
 */
 static void doREPL (lua_State *L) {
   int status;
