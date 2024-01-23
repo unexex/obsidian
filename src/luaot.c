@@ -550,15 +550,18 @@ int main(int argc, char **argv)
       if (alloc){
         println(" init_pool_alloc();" );
       }
-      /*for (int i = 0; i < 100; i++){ TODO: Add libs
+      for (int i = 0; i < 100; i++){
         if (strlen(secondaryFiles[i]) > 0){
             char str[12];
             sprintf(str, "%d", i);
             
             char* modName = strtok(secondaryFiles[i], ".");
-            println(" luaL_requiref(L, \"%s\", luaopen_submodule_%s, 1);", modName, str);
+            println(" luaL_getsubtable(L, LUA_REGISTRYINDEX, LUA_PRELOAD_TABLE);");
+            println(" lua_pushcfunction(L, luaopen_submodule_%s);", str);
+            println(" lua_setfield(L, -2, \"%s\");", modName);
+            println(" lua_pop(L, 1);  /* remove PRELOAD table */");
         }
-      }*/
+      }
       println(" int i;");
       println(" lua_createtable(L, argc + 1, 0);");
       println(" for (i = 0; i < argc; i++) {");
