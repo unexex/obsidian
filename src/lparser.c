@@ -12,6 +12,7 @@
 
 #include <limits.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "lua.h"
 
@@ -866,8 +867,10 @@ static void fieldsel (LexState *ls, expdesc *v) {
 static void yindex (LexState *ls, expdesc *v) {
   /* index -> '[' expr ']' */
   luaX_next(ls);  /* skip the '[' */
-  expr(ls, v);
-  luaK_exp2val(ls->fs, v);
+  //do {
+    expr(ls, v);
+    luaK_exp2val(ls->fs, v);
+  //} while (testnext(ls, ','));
   checknext(ls, ']');
 }
 
@@ -906,6 +909,13 @@ static void recfield (LexState *ls, ConsControl *cc) {
     sindex(ls, &key);
   }
   else  /* ls->t.token == '[' */
+    /*
+    luaX_next(ls); /* skip the '[' /
+    do {
+        expr(ls, &key);
+        luaK_exp2val(ls->fs, &key);
+    } while (testnext(ls, ','));
+    checknext(ls, ']');*/
     yindex(ls, &key);
   cc->nh++;
   if(!(testnext(ls, '=') || testnext(ls, ':')))
@@ -2149,37 +2159,27 @@ static void autolocalstat (LexState *ls) {
   int nvars = 0;
   int nexps;
   expdesc e;
+  char* names[10] = {0};
+  int cidx = 0;
   do {
     vidx = new_localvar(ls, str_checkname(ls));
-    kind = RDKTOCLOSE;
-    getlocalvardesc(fs, vidx)->vd.kind = kind;
-    if (kind == RDKTOCLOSE) {  /* to-be-closed? */
-      if (toclose != -1)  /* one already present? */
-        luaK_semerror(ls, "multiple to-be-closed variables in local list");
-      toclose = fs->nactvar + nvars;
-    }
     nvars++;
     optParamType(ls);
+    if (nvars < 10) {
+      names[nvars] = getstr(ls->dyd->actvar.arr[vidx].vd.name);
+    }else{
+      luaK_semerror(ls, "too many variables to destruct");
+    }
   } while (testnext(ls, ','));
-  if (testnext(ls, '='))
-    nexps = explist(ls, &e);
-  else {
-    e.k = VVOID;
-    nexps = 0;
+  if (testnext(ls, TK_IN))
+  { 
+    checknext(ls, TK_NAME);
+    const char* name = getstr(ls->t.seminfo.ts);
+
+    luaX_syntaxerror(ls, "destructing assignment not supported yet");
+  } else {
+    luaX_syntaxerror(ls, "expected 'in' after destructing variables");
   }
-  var = getlocalvardesc(fs, vidx);  /* get last variable */
-  if (nvars == nexps &&  /* no adjustments? */
-      var->vd.kind == RDKCONST &&  /* last variable is const? */
-      luaK_exp2const(fs, &e, &var->k)) {  /* compile-time constant? */
-    var->vd.kind = RDKCTC;  /* variable is a compile-time constant */
-    adjustlocalvars(ls, nvars - 1);  /* exclude last variable */
-    fs->nactvar++;  /* but count it */
-  }
-  else {
-    adjust_assign(ls, nvars, nexps, &e);
-    adjustlocalvars(ls, nvars);
-  }
-  checktoclose(fs, toclose);
 }
 
 static int funcname (LexState *ls, expdesc *v) {
@@ -2337,14 +2337,14 @@ static void statement (LexState *ls) {
       funcstat(ls, line);
       break;
     }
-    case TK_AUTO: {  /* stat -> localstat */
-      luaX_next(ls);  /* skip LOCAL */
-      if (testnext(ls, TK_FUNCTION))  /* local function? */
+    /*case TK_AUTO: {  /* stat -> localstat /
+      luaX_next(ls);  /* skip LOCAL /
+      if (testnext(ls, TK_FUNCTION))  /* local function? /
         luaX_syntaxerror(ls, "'auto' cannot be used with 'function'");
       else
         autolocalstat(ls);
       break;
-    }
+    }*/
     case TK_LET: {  /* stat -> localstat */
       luaX_next(ls);  /* skip LOCAL */
       if (testnext(ls, TK_FUNCTION))  /* local function? */

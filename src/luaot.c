@@ -115,11 +115,10 @@ void usage()
           "  -p                 run production optimizations\n"
           "  -t                 use gotos instead of switches in generated code (experimental)\n"
           " Language options:\n"
-          //"  -js                output JavaScript\n"
           "  -wasm              output WebAssembly (via Emscripten)\n"
           "  -c                 output C\n",
-          //"  -rust              output Rust\n"
-          //"  -html              output HTML\n"
+          //"  -byte              output bytecode\n" No real need rn
+          //"  -rust              output Rust\n" Maybe one day
           program_name);
 }
 
