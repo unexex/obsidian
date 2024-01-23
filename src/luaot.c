@@ -444,6 +444,8 @@ int main(int argc, char **argv)
         if (filext && strcmp(filext, ".c") == 0){
             type = 2;
         }else if (filext && strcmp(filext, ".wasm") == 0){
+            fatal_error("WASM output is automatically rendered by renaming the output file to .wasm");
+        }else if (filext && strcmp(filext, ".js") == 0){
             type = 0;
         }else{
             fatal_error("unknown file extension");
@@ -605,11 +607,9 @@ int main(int argc, char **argv)
             strcat(style, " -g");
         }
 
-        if (output_filename)
-            printf("warning: ignoring -o option when compiling to WebAssembly\n");
         strcat(style, " -s WASM=1");// -sEXPORTED_RUNTIME_METHODS=_main");
     
-        sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c", style);
+        sprintf(command, "emcc -I/usr/local/include -L/usr/local/lib -lm -lwasmlua -s SUPPORT_LONGJMP=1 %s ob_temp.c -o %s", style, output_filename);
 
         if (debug) printf("Compiling with command: %s\n", command);
         system(command);
