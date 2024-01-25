@@ -1,0 +1,89 @@
+{
+  "name": "obsidian",
+  "version": "0.1.4",
+  "description": "A Lua VM written in JS ES6 targeting the browser",
+  "main": "src/ob.js",
+  "directories": {
+    "lib": "src"
+  },
+  "scripts": {
+    "lint": "eslint src/ test/",
+    "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unexex/obsidian.git"
+  },
+  "keywords": [
+    "lua",
+    "vm"
+  ],
+  "contributors": [
+    "Benoit Giannangeli",
+    "Daurnimator <quae@daurnimator.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://meta.unexex.tech/"
+  },
+  "homepage": "https://unexex.tech",
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "jest": "^24.5.0"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.9",
+    "sprintf-js": "^1.1.2",
+    "tmp": "^0.0.33"
+  },
+  "sideEffects": false,
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es6": true,
+      "node": true,
+      "worker": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+      "indent": [
+        "error",
+        4,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "no-console": 0,
+      "no-empty": [
+        2,
+        {
+          "allowEmptyCatch": true
+        }
+      ],
+      "no-unused-vars": [
+        2,
+        {
+          "args": "none"
+        }
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          "test/**/*.test.js"
+        ],
+        "env": {
+          "jest": true
+        }
+      }
+    ]
+  }
+}
