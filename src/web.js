@@ -257,7 +257,7 @@ if (typeof document !== 'undefined' && document instanceof HTMLDocument) {
 		if (!contentTypeMatch)
 			return;
 		let mimetype = contentTypeMatch[1];
-		if (mimetype !== "application/lua" && mimetype !== "text/lua")
+		if (mimetype !== "application/ob" && mimetype !== "text/ob")
 			return;
 
 		if (tag.hasAttribute("lua-version")) {
@@ -288,7 +288,7 @@ if (typeof document !== 'undefined' && document instanceof HTMLDocument) {
 
 	/* the query selector here is slightly liberal,
 	   more checks occur in try_tag */
-	const selector = 'script[type^="application/lua"], script[type^="text/lua"]';
+	const selector = 'script[type^="application/ob"], script[type^="text/ob"]';
 
 	/* try to run existing script tags */
 	Array.prototype.forEach.call(document.querySelectorAll(selector), try_tag);
