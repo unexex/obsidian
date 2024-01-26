@@ -582,9 +582,9 @@ const luaL_len = function(L, idx) {
     return l;
 };
 
-const p_I = to_luastring("%I");
-const p_f = to_luastring("%f");
-const luaL_tolstring = function(L, idx) {
+const p_I = to_luastring("\x1b[33m%I\x1b[0m");
+const p_f = to_luastring("\x1b[33m%f\x1b[0m");
+const luaL_tolstring = function(L, idx, color=true) {
     if (luaL_callmeta(L, idx, __tostring)) {
         if (!lua_isstring(L, -1))
             luaL_error(L, to_luastring("'__tostring' must return a string"));
@@ -602,15 +602,15 @@ const luaL_tolstring = function(L, idx) {
                 lua_pushvalue(L, idx);
                 break;
             case LUA_TBOOLEAN:
-                lua_pushliteral(L, (lua_toboolean(L, idx) ? "true" : "false"));
+                lua_pushliteral(L, (lua_toboolean(L, idx) ? "\x1b[32mtrue\x1b[0m" : "\x1b[31mfalse\x1b[0m"));
                 break;
             case LUA_TNIL:
-                lua_pushliteral(L, "nil");
+                lua_pushliteral(L, "\x1b[90mnull\x1b[0m");
                 break;
             default: {
                 let tt = luaL_getmetafield(L, idx, __name);
                 let kind = tt === LUA_TSTRING ? lua_tostring(L, -1) : luaL_typename(L, idx);
-                lua_pushfstring(L, to_luastring("%s: %p"), kind, lua_topointer(L, idx));
+                lua_pushfstring(L, to_luastring("%s: \x1b[90m<%p>\x1b[0m"), kind, lua_topointer(L, idx));
                 if (tt !== LUA_TNIL)
                     lua_remove(L, -2);
                 break;

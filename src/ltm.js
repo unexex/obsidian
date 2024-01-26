@@ -21,7 +21,7 @@ const lvm     = require('./lvm.js');
 
 const luaT_typenames_ = [
     "no value",
-    "nil",
+    "null",
     "boolean",
     "userdata",
     "number",

@@ -295,7 +295,7 @@ const PrintConstant = function(f, i) {
     let o = f.k[i];
     switch (o.ttype()) {
         case LUA_TNIL:
-            print("nil");
+            print("null");
             break;
         case LUA_TBOOLEAN:
             print(o.value ? "true" : "false");

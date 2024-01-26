@@ -120,15 +120,15 @@ if (typeof process === "undefined") {
 }
 const luaB_print = function(L) {
     let n = lua_gettop(L); /* number of arguments */
-    lua_getglobal(L, to_luastring("tostring", true));
+    lua_getglobal(L, to_luastring("tostring", true, true));
     for (let i = 1; i <= n; i++) {
         lua_pushvalue(L, -1);  /* function to be called */
         lua_pushvalue(L, i);  /* value to print */
         lua_call(L, 1, 1);
         let s = lua_tolstring(L, -1);
         if (s === null)
-            return luaL_error(L, to_luastring("'tostring' must return a string to 'print'"));
-        if (i > 1) lua_writestring(to_luastring("\t"));
+            return luaL_error(L, to_luastring("'tostring' must return a string to 'print'", null, true));
+        if (i > 1) lua_writestring(to_luastring("\t", null, true));
         lua_writestring(s);
         lua_pop(L, 1);
     }
