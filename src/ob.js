@@ -27,10 +27,10 @@ module.exports.to_jsstring       = core.to_jsstring;
 module.exports.to_luastring      = core.to_luastring;
 module.exports.to_uristring      = core.to_uristring;
 
-const luaconf = require('./luaconf.js');
-const lua     = require('./lua.js');
-const lauxlib = require('./lauxlib.js');
-const lualib  = require('./lualib.js');
+const luaconf = require('./luaconf');
+const lua     = require('./lua');
+const lauxlib = require('./lauxlib');
+const lualib  = require('./lualib');
 
 module.exports.luaconf = luaconf;
 module.exports.lua     = lua;

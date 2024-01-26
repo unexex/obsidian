@@ -1,6 +1,6 @@
 "use strict";
 
-const { LUA_MAXINTEGER } = require('./luaconf.js');
+const { LUA_MAXINTEGER } = require('./luaconf');
 const {
     LUA_OPEQ,
     LUA_OPLT,
@@ -29,7 +29,7 @@ const {
     lua_settop,
     lua_toboolean,
     lua_type
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_Buffer,
     luaL_addlstring,
@@ -46,8 +46,8 @@ const {
     luaL_optlstring,
     luaL_pushresult,
     luaL_typename
-} = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+} = require('./lauxlib');
+const lualib = require('./lualib');
 const { to_luastring } = require("./obcore.js");
 
 /*

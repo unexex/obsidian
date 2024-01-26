@@ -10,7 +10,7 @@ const {
     LUA_NUMBER_FRMLEN,
     frexp,
     lua_getlocaledecpoint
-} = require('./luaconf.js');
+} = require('./luaconf');
 const {
     LUA_TBOOLEAN,
     LUA_TFUNCTION,
@@ -46,7 +46,7 @@ const {
     lua_touserdata,
     lua_type,
     lua_upvalueindex
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_Buffer,
     luaL_addchar,
@@ -72,8 +72,8 @@ const {
     luaL_pushresultsize,
     luaL_tolstring,
     luaL_typename
-} = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+} = require('./lauxlib');
+const lualib = require('./lualib');
 const {
     luastring_eq,
     luastring_indexOf,

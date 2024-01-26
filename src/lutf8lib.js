@@ -10,7 +10,7 @@ const {
     lua_pushvalue,
     lua_setfield,
     lua_tointeger
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_Buffer,
     luaL_addvalue,
@@ -23,7 +23,7 @@ const {
     luaL_newlib,
     luaL_optinteger,
     luaL_pushresult
-} = require('./lauxlib.js');
+} = require('./lauxlib');
 const {
     luastring_of,
     to_luastring

@@ -17,18 +17,18 @@ const {
         LUA_TUSERDATA
     },
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 const {
     LUA_MAXINTEGER
-} = require('./luaconf.js');
-const { lua_assert } = require('./llimits.js');
-const ldebug  = require('./ldebug.js');
-const lobject = require('./lobject.js');
+} = require('./luaconf');
+const { lua_assert } = require('./llimits');
+const ldebug  = require('./ldebug');
+const lobject = require('./lobject');
 const {
     luaS_hashlongstr,
     TString
-} = require('./lstring.js');
-const lstate  = require('./lstate.js');
+} = require('./lstring');
+const lstate  = require('./lstate');
 
 /* used to prevent conflicts with lightuserdata keys */
 let lightuserdata_hashes = new WeakMap();

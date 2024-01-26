@@ -13,7 +13,7 @@ const {
         LUA_TSHRSTR
     },
     luastring_of
-} = require('./defs.js');
+} = require('./defs');
 
 const LUAC_DATA    = luastring_of(25, 147, 13, 10, 26, 10);
 const LUAC_INT     = 0x5678;

@@ -14,10 +14,10 @@ const {
     is_luastring,
     luastring_eq,
     to_luastring
-} = require('./defs.js');
-const ldo      = require('./ldo.js');
-const lfunc    = require('./lfunc.js');
-const lobject  = require('./lobject.js');
+} = require('./defs');
+const ldo      = require('./ldo');
+const lfunc    = require('./lfunc');
+const lobject  = require('./lobject');
 const {
     MAXARG_sBx,
     POS_A,
@@ -32,13 +32,13 @@ const {
     SIZE_Bx,
     SIZE_C,
     SIZE_OP
-} = require('./lopcodes.js');
+} = require('./lopcodes');
 const { lua_assert } = require("./llimits.js");
-const { luaS_bless } = require('./lstring.js');
+const { luaS_bless } = require('./lstring');
 const {
     luaZ_read,
     ZIO
-} = require('./lzio.js');
+} = require('./lzio');
 
 let LUAC_DATA = [0x19, 0x93, 13, 10, 0x1a, 10];
 

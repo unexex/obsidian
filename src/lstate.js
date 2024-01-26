@@ -13,12 +13,12 @@ const {
     thread_status: {
         LUA_OK
     }
-} = require('./defs.js');
-const lobject              = require('./lobject.js');
-const ldo                  = require('./ldo.js');
-const lapi                 = require('./lapi.js');
-const ltable               = require('./ltable.js');
-const ltm                  = require('./ltm.js');
+} = require('./defs');
+const lobject              = require('./lobject');
+const ldo                  = require('./ldo');
+const lapi                 = require('./lapi');
+const ltable               = require('./ltable');
+const ltm                  = require('./ltm');
 
 const EXTRA_STACK = 5;
 

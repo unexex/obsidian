@@ -2,7 +2,7 @@
 
 const {
     LUAL_BUFFERSIZE
-} = require('./luaconf.js');
+} = require('./luaconf');
 const {
     LUA_ERRERR,
     LUA_MULTRET,
@@ -77,7 +77,7 @@ const {
     lua_type,
     lua_typename,
     lua_version
-} = require('./lua.js');
+} = require('./lua');
 const {
     from_userstring,
     luastring_eq,

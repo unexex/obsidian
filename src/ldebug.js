@@ -18,22 +18,22 @@ const {
     luastring_eq,
     luastring_indexOf,
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 const {
     api_check,
     lua_assert
-} = require('./llimits.js');
-const { LUA_IDSIZE } = require('./luaconf.js');
-const lapi     = require('./lapi.js');
-const ldo      = require('./ldo.js');
-const lfunc    = require('./lfunc.js');
-const llex     = require('./llex.js');
-const lobject  = require('./lobject.js');
-const lopcodes = require('./lopcodes.js');
-const lstate   = require('./lstate.js');
-const ltable   = require('./ltable.js');
-const ltm      = require('./ltm.js');
-const lvm      = require('./lvm.js');
+} = require('./llimits');
+const { LUA_IDSIZE } = require('./luaconf');
+const lapi     = require('./lapi');
+const ldo      = require('./ldo');
+const lfunc    = require('./lfunc');
+const llex     = require('./llex');
+const lobject  = require('./lobject');
+const lopcodes = require('./lopcodes');
+const lstate   = require('./lstate');
+const ltable   = require('./ltable');
+const ltm      = require('./ltm');
+const lvm      = require('./lvm');
 
 const currentpc = function(ci) {
     lua_assert(ci.callstatus & lstate.CIST_LUA);

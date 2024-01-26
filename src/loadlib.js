@@ -7,7 +7,7 @@ const {
     LUA_PATH_DEFAULT,
     LUA_PATH_MARK,
     LUA_PATH_SEP
-} = require('./luaconf.js');
+} = require('./luaconf');
 const {
     LUA_OK,
     LUA_REGISTRYINDEX,
@@ -45,7 +45,7 @@ const {
     lua_tostring,
     lua_touserdata,
     lua_upvalueindex
-} = require('./lua.js');
+} = require('./lua');
 const {
     LUA_LOADED_TABLE,
     LUA_PRELOAD_TABLE,
@@ -62,15 +62,15 @@ const {
     luaL_optstring,
     luaL_pushresult,
     luaL_setfuncs
-} = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+} = require('./lauxlib');
+const lualib = require('./lualib');
 const {
     luastring_indexOf,
     to_jsstring,
     to_luastring,
     to_uristring
 } = require("./obcore.js");
-const fengari  = require('./ob.js');
+const fengari  = require('./ob');
 
 const global_env = (function() {
     if (typeof process !== "undefined") {

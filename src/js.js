@@ -2,10 +2,10 @@
 
 const {
 	to_luastring
-} = require('./ob.js');
-const lua = require('./lua.js');
-const lauxlib = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+} = require('./ob');
+const lua = require('./lua');
+const lauxlib = require('./lauxlib');
+const lualib = require('./lualib');
 
 const {
 	LUA_MULTRET,
@@ -22,7 +22,7 @@ const {
 	LUA_TTABLE,
 	LUA_TTHREAD,
 	LUA_TUSERDATA,
-} = require('./defs.js');
+} = require('./defs');
 const {
 	lua_atnativeerror,
 	lua_call,

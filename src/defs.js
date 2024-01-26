@@ -329,7 +329,7 @@ const LUA_OPLE = 2;
 
 const LUA_MINSTACK = 20;
 
-const { LUAI_MAXSTACK } = require('./luaconf.js');
+const { LUAI_MAXSTACK } = require('./luaconf');
 const LUA_REGISTRYINDEX = -LUAI_MAXSTACK - 1000;
 
 const lua_upvalueindex = function(i) {

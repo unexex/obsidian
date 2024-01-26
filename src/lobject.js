@@ -39,34 +39,34 @@ const {
     luastring_of,
     to_jsstring,
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 const {
     lisdigit,
     lisprint,
     lisspace,
     lisxdigit
-} = require('./ljstype.js');
-const ldebug  = require('./ldebug.js');
-const ldo     = require('./ldo.js');
-const lstate  = require('./lstate.js');
+} = require('./ljstype');
+const ldebug  = require('./ldebug');
+const ldo     = require('./ldo');
+const lstate  = require('./lstate');
 const {
     luaS_bless,
     luaS_new
-} = require('./lstring.js');
-const ltable  = require('./ltable.js');
+} = require('./lstring');
+const ltable  = require('./ltable');
 const {
     LUA_COMPAT_FLOATSTRING,
     ldexp,
     lua_integer2str,
     lua_number2str
-} = require('./luaconf.js');
-const lvm     = require('./lvm.js');
+} = require('./luaconf');
+const lvm     = require('./lvm');
 const {
     MAX_INT,
     luai_nummod,
     lua_assert
 } = require("./llimits.js");
-const ltm     = require('./ltm.js');
+const ltm     = require('./ltm');
 
 const LUA_TPROTO = LUA_NUMTAGS;
 const LUA_TDEADKEY = LUA_NUMTAGS+1;

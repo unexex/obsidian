@@ -17,7 +17,7 @@ const {
     lua_setfield,
     lua_tostring,
     lua_touserdata
-} = require('./lua.js');
+} = require('./lua');
 const {
     LUA_FILEHANDLE,
     luaL_checkany,
@@ -30,8 +30,8 @@ const {
     luaL_setfuncs,
     luaL_setmetatable,
     luaL_testudata
-} = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+} = require('./lauxlib');
+const lualib = require('./lualib');
 const { to_luastring } = require("./obcore.js");
 
 const IO_PREFIX = "_IO_";

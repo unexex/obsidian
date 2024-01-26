@@ -4,36 +4,36 @@ const {
     constant_types: { LUA_TBOOLEAN, LUA_TLNGSTR },
     thread_status: { LUA_ERRSYNTAX },
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 const {
     LUA_MINBUFFER,
     MAX_INT,
     lua_assert
-} = require('./llimits.js');
-const ldebug   = require('./ldebug.js');
-const ldo      = require('./ldo.js');
+} = require('./llimits');
+const ldebug   = require('./ldebug');
+const ldo      = require('./ldo');
 const {
     lisdigit,
     lislalnum,
     lislalpha,
     lisspace,
     lisxdigit
-} = require('./ljstype.js');
-const lobject  = require('./lobject.js');
+} = require('./ljstype');
+const lobject  = require('./lobject');
 const {
     luaS_bless,
     luaS_hash,
     luaS_hashlongstr,
     luaS_new
-} = require('./lstring.js');
-const ltable   = require('./ltable.js');
+} = require('./lstring');
+const ltable   = require('./ltable');
 const {
     EOZ,
     luaZ_buffer,
     luaZ_buffremove,
     luaZ_resetbuffer,
     luaZ_resizebuffer
-} = require('./lzio.js');
+} = require('./lzio');
 
 const FIRST_RESERVED = 257;
 

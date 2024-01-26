@@ -6,18 +6,18 @@ const {
         LUA_TUSERDATA
     },
     to_luastring
-} = require('./defs.js');
-const { lua_assert } = require('./llimits.js');
-const lobject = require('./lobject.js');
-const ldo     = require('./ldo.js');
-const lstate  = require('./lstate.js');
+} = require('./defs');
+const { lua_assert } = require('./llimits');
+const lobject = require('./lobject');
+const ldo     = require('./ldo');
+const lstate  = require('./lstate');
 const {
     luaS_bless,
     luaS_new
-} = require('./lstring.js');
-const ltable  = require('./ltable.js');
-const ldebug  = require('./ldebug.js');
-const lvm     = require('./lvm.js');
+} = require('./lstring');
+const ltable  = require('./ltable');
+const ldebug  = require('./ldebug');
+const lvm     = require('./lvm');
 
 const luaT_typenames_ = [
     "no value",

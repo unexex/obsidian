@@ -62,5 +62,5 @@ const LUA_FENGARILIBNAME = "ob";
 module.exports.LUA_FENGARILIBNAME = LUA_FENGARILIBNAME;
 module.exports.luaopen_fengari = require("./oblib.js").luaopen_fengari;
 
-const linit = require('./linit.js');
+const linit = require('./linit');
 module.exports.luaL_openlibs = linit.luaL_openlibs;

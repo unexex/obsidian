@@ -52,7 +52,7 @@ const {
     lua_tostring,
     lua_type,
     lua_typename
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_argcheck,
     luaL_checkany,
@@ -70,7 +70,7 @@ const {
     luaL_setfuncs,
     luaL_tolstring,
     luaL_where
-} = require('./lauxlib.js');
+} = require('./lauxlib');
 const {
     to_jsstring,
     to_luastring

@@ -20,7 +20,7 @@ const {
     lua_settop,
     lua_toboolean,
     lua_tointegerx
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_Buffer,
     luaL_addchar,
@@ -40,7 +40,7 @@ const {
     luaL_optlstring,
     luaL_optstring,
     luaL_pushresult
-} = require('./lauxlib.js');
+} = require('./lauxlib');
 const {
     luastring_eq,
     to_jsstring,

@@ -18,7 +18,7 @@ const {
         LUA_TUSERDATA
     },
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 const {
     INDEXK,
     ISK,
@@ -72,28 +72,28 @@ const {
         OP_UNM,
         OP_VARARG
     }
-} = require('./lopcodes.js');
+} = require('./lopcodes');
 const {
     LUA_MAXINTEGER,
     LUA_MININTEGER,
     lua_numbertointeger
-} = require('./luaconf.js');
+} = require('./luaconf');
 const {
     lua_assert,
     luai_nummod
-} = require('./llimits.js');
-const lobject = require('./lobject.js');
-const lfunc   = require('./lfunc.js');
-const lstate  = require('./lstate.js');
+} = require('./llimits');
+const lobject = require('./lobject');
+const lfunc   = require('./lfunc');
+const lstate  = require('./lstate');
 const {
     luaS_bless,
     luaS_eqlngstr,
     luaS_hashlongstr
-} = require('./lstring.js');
-const ldo     = require('./ldo.js');
-const ltm     = require('./ltm.js');
-const ltable  = require('./ltable.js');
-const ldebug  = require('./ldebug.js');
+} = require('./lstring');
+const ldo     = require('./ldo');
+const ltm     = require('./ltm');
+const ltable  = require('./ltable');
+const ldebug  = require('./ldebug');
 
 /*
 ** finish execution of an opcode interrupted by an yield

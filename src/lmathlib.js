@@ -18,7 +18,7 @@ const {
     lua_tointeger,
     lua_tointegerx,
     lua_type
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_argcheck,
     luaL_argerror,
@@ -28,12 +28,12 @@ const {
     luaL_error,
     luaL_newlib,
     luaL_optnumber
-} = require('./lauxlib.js');
+} = require('./lauxlib');
 const {
     LUA_MAXINTEGER,
     LUA_MININTEGER,
     lua_numbertointeger
-} = require('./luaconf.js');
+} = require('./luaconf');
 const { to_luastring } = require("./obcore.js");
 
 let rand_state;

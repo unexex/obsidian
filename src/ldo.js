@@ -27,25 +27,25 @@ const {
     lua_Debug,
     luastring_indexOf,
     to_luastring
-} = require('./defs.js');
-const lapi     = require('./lapi.js');
-const ldebug   = require('./ldebug.js');
-const lfunc    = require('./lfunc.js');
+} = require('./defs');
+const lapi     = require('./lapi');
+const ldebug   = require('./ldebug');
+const lfunc    = require('./lfunc');
 const {
     api_check,
     lua_assert,
     LUAI_MAXCCALLS
-} = require('./llimits.js');
-const lobject  = require('./lobject.js');
-const lopcodes = require('./lopcodes.js');
-const lparser  = require('./lparser.js');
-const lstate   = require('./lstate.js');
-const { luaS_newliteral } = require('./lstring.js');
-const ltm      = require('./ltm.js');
-const { LUAI_MAXSTACK } = require('./luaconf.js');
-const lundump  = require('./lundump.js');
-const lvm      = require('./lvm.js');
-const { MBuffer } = require('./lzio.js');
+} = require('./llimits');
+const lobject  = require('./lobject');
+const lopcodes = require('./lopcodes');
+const lparser  = require('./lparser');
+const lstate   = require('./lstate');
+const { luaS_newliteral } = require('./lstring');
+const ltm      = require('./ltm');
+const { LUAI_MAXSTACK } = require('./luaconf');
+const lundump  = require('./lundump');
+const lvm      = require('./lvm');
+const { MBuffer } = require('./lzio');
 
 const adjust_top = function(L, newtop) {
     if (L.top < newtop) {

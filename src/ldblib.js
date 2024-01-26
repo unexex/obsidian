@@ -57,7 +57,7 @@ const {
     lua_upvalueid,
     lua_upvaluejoin,
     lua_xmove
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_argcheck,
     luaL_argerror,
@@ -72,8 +72,8 @@ const {
     luaL_optstring,
     luaL_traceback,
     lua_writestringerror
-} = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+} = require('./lauxlib');
+const lualib = require('./lualib');
 const {
     luastring_indexOf,
     to_luastring

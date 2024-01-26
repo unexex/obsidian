@@ -3,7 +3,7 @@
 const {
     LUA_MULTRET,
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 const {
     BinOpr: {
         OPR_ADD,
@@ -74,16 +74,16 @@ const {
     luaK_setreturns,
     luaK_storevar,
     luaK_stringK
-} = require('./lcode.js');
-const ldo      = require('./ldo.js');
-const lfunc    = require('./lfunc.js');
-const llex     = require('./llex.js');
+} = require('./lcode');
+const ldo      = require('./ldo');
+const lfunc    = require('./lfunc');
+const llex     = require('./llex');
 const {
     LUAI_MAXCCALLS,
     MAX_INT,
     lua_assert
-}  = require('./llimits.js');
-const lobject  = require('./lobject.js');
+}  = require('./llimits');
+const lobject  = require('./lobject');
 const {
     OpCodesI: {
         OP_CALL,
@@ -103,13 +103,13 @@ const {
     SETARG_B,
     SETARG_C,
     SET_OPCODE
-} = require('./lopcodes.js');
+} = require('./lopcodes');
 const {
     luaS_eqlngstr,
     luaS_new,
     luaS_newliteral
-} = require('./lstring.js');
-const ltable   = require('./ltable.js');
+} = require('./lstring');
+const ltable   = require('./ltable');
 const Proto    = lfunc.Proto;
 const R        = llex.RESERVED;
 

@@ -2,10 +2,10 @@ const {
     lua_pushinteger,
     lua_pushliteral,
     lua_setfield
-} = require('./lua.js');
+} = require('./lua');
 const {
     luaL_newlib
-} = require('./lauxlib.js');
+} = require('./lauxlib');
 const {
     FENGARI_AUTHORS,
     FENGARI_COPYRIGHT,

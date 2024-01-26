@@ -23,14 +23,14 @@ const {
         LUA_TTABLE
     },
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 const { lua_assert } = require("./llimits.js");
-const llex     = require('./llex.js');
-const lobject  = require('./lobject.js');
-const lopcodes = require('./lopcodes.js');
-const lparser  = require('./lparser.js');
-const ltable   = require('./ltable.js');
-const lvm      = require('./lvm.js');
+const llex     = require('./llex');
+const lobject  = require('./lobject');
+const lopcodes = require('./lopcodes');
+const lparser  = require('./lparser');
+const ltable   = require('./ltable');
+const lvm      = require('./lvm');
 
 const OpCodesI = lopcodes.OpCodesI;
 const TValue   = lobject.TValue;

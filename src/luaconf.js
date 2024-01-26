@@ -6,7 +6,7 @@ const {
     LUA_VERSION_MAJOR,
     LUA_VERSION_MINOR,
     to_luastring
-} = require('./defs.js');
+} = require('./defs');
 
 /*
 ** LUA_PATH_SEP is the character that separates templates in a path.
