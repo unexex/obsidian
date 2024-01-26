@@ -7,8 +7,10 @@
     "lib": "src"
   },
   "scripts": {
-    "lint": "eslint src/ test/",
-    "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint && npm run test"
+    "lint": "eslint src/ test/ webpack.config.js",
+    "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint",
+    "build": "webpack --mode production",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,7 @@
     "vm"
   ],
   "contributors": [
+    "Unexex <admin@unexex.tech>",
     "Benoit Giannangeli",
     "Daurnimator <quae@daurnimator.com>"
   ],
@@ -29,12 +32,14 @@
   "homepage": "https://unexex.tech",
   "devDependencies": {
     "eslint": "^5.15.1",
-    "jest": "^24.5.0"
+    "jest": "^24.5.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "readline-sync": "^1.4.9",
     "sprintf-js": "^1.1.2",
-    "tmp": "^0.0.33"
+    "tmp": "^0.0.33",
+    "webpack": "^5.90.0"
   },
   "sideEffects": false,
   "eslintConfig": {

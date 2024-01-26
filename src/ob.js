@@ -1,6 +1,7 @@
 /**
 @license MIT
 
+Copyright © 2019-2024 Unexex
 Copyright © 2017-2019 Benoit Giannangeli
 Copyright © 2017-2019 Daurnimator
 Copyright © 1994–2017 Lua.org, PUC-Rio.
