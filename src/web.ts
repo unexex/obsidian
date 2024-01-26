@@ -179,7 +179,7 @@ if (typeof document !== 'undefined' && document instanceof HTMLDocument) {
 			}
 			lua_pop(L, 1);
 			if (window.dispatchEvent(e)) {
-				console.error("uncaught exception", e.error);
+				console.error("ob: uncaught exception at ", e.error, ", message: ", e.message);
 			}
 		}
 	};
@@ -283,7 +283,7 @@ if (typeof document !== 'undefined' && document instanceof HTMLDocument) {
 			subtree: true
 		});
 	} else if (console.warn) {
-		console.warn("fengari-web: MutationObserver not found; lua script tags will not be run when inserted");
+		console.warn("ob: MutationObserver not found; lua script tags will not be run when inserted");
 	}
 
 	/* the query selector here is slightly liberal,

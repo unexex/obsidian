@@ -1,7 +1,15 @@
 <!-- Example HTML -->
-
-<script src="dist/web.bundle.js" type="text/javascript"></script>
-<script type="application/ob">
-    print("Hello World!")
-</script>
-    
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+        <script src="dist/web.bundle.js" type="text/javascript"></script>
+        <script type="application/ob">
+            js = require('js')
+            local window = js.global
+            local document = window["document"]
+            
+            print("Document's title: " .. document.title)
+        </script>
+    </head>
+</html>

@@ -494,7 +494,7 @@ const luaopen_base = function(L) {
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, to_luastring("_G"));
     /* set global _VERSION */
-    lua_pushliteral(L, LUA_VERSION);
+    lua_pushliteral(L, "Obsidian");
     lua_setfield(L, -2, to_luastring("_VERSION"));
     return 1;
 };

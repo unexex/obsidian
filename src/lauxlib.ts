@@ -582,9 +582,14 @@ const luaL_len = function(L, idx) {
     return l;
 };
 
-const p_I = to_luastring("\x1b[33m%I\x1b[0m");
-const p_f = to_luastring("\x1b[33m%f\x1b[0m");
-const p_s = to_luastring("\x1b[32m'%s'\x1b[0m");
+const node = typeof process !== 'undefined' && process.release && process.release.name === 'node';
+
+const c_p_I = to_luastring("\x1b[33m%I\x1b[0m");
+const c_p_f = to_luastring("\x1b[33m%f\x1b[0m");
+const c_p_s = to_luastring("\x1b[32m'%s'\x1b[0m");
+const p_I = to_luastring("%I");
+const p_f = to_luastring("%f");
+const p_s = to_luastring("'%s'");
 const luaL_tolstring = function(L, idx, color=true) {
     if (luaL_callmeta(L, idx, __tostring)) {
         if (!lua_isstring(L, -1))
@@ -594,13 +599,13 @@ const luaL_tolstring = function(L, idx, color=true) {
         switch(t) {
             case LUA_TNUMBER: {
                 if (lua_isinteger(L, idx))
-                    lua_pushfstring(L, p_I, lua_tointeger(L, idx));
+                    lua_pushfstring(L, node ? c_p_I : p_I, lua_tointeger(L, idx));
                 else
-                    lua_pushfstring(L, p_f, lua_tonumber(L, idx));
+                    lua_pushfstring(L, node ? c_p_f : p_f, lua_tonumber(L, idx));
                 break;
             }
             case LUA_TSTRING:
-                lua_pushfstring(L, p_s, lua_tostring(L, idx));
+                lua_pushfstring(L,  node ? c_p_s : p_s, lua_tostring(L, idx));
                 break;
             case LUA_TBOOLEAN:
                 lua_pushliteral(L, (lua_toboolean(L, idx) ? "\x1b[33mtrue\x1b[0m" : "\x1b[33mfalse\x1b[0m"));

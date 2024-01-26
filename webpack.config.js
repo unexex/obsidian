@@ -1,11 +1,21 @@
 "use strict";
 
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = [
 	{
 		name: 'script-tag',
-		entry: './src/web.ts', // change this to your TypeScript entry file
+		optimization: {
+			minimizer: [
+			  new TerserPlugin({
+				terserOptions: {
+				  keep_fnames: true,
+				},
+			  }),
+			],
+		  },
+		entry: './src/web.ts',
 		target: 'web',
 		output: {
 		  filename: 'web.js',
@@ -17,7 +27,7 @@ module.exports = [
 		module: {
 		  rules: [
 			{
-			  test: [/\.tsx?$/], // change this to handle .ts and .tsx files
+			  test: [/\.tsx?$/],
 			  use: 'ts-loader',
 			  exclude: /node_modules/,
 			},
@@ -40,11 +50,21 @@ module.exports = [
 		It is expected that most people would minify this with their own build process
 		*/
 		name: 'bundle',
+		optimization: {
+			minimizer: [
+			  new TerserPlugin({
+				terserOptions: {
+				  keep_fnames: true
+				},
+			  }),
+			],
+		  },
 		entry: './src/web.ts',
 		target: 'web',
 		output: {
 			filename: 'web.bundle.js',
-			libraryTarget: 'commonjs2'
+			library: 'ob',
+			libraryTarget: 'var' // or windows
 		},
 		devtool: 'hidden-source-map',
 		node: false,

@@ -14,8 +14,8 @@ const FENGARI_VERSION_NUM     = 1;
 const FENGARI_VERSION_RELEASE = "0";
 const FENGARI_VERSION         = "Obsidian " + FENGARI_VERSION_MAJOR + "." + FENGARI_VERSION_MINOR;
 const FENGARI_RELEASE         = FENGARI_VERSION + "." + FENGARI_VERSION_RELEASE;
-const FENGARI_AUTHORS         = "Unexex, B. Giannangeli, Daurnimator";
-const FENGARI_COPYRIGHT       = FENGARI_RELEASE + "  Copyright (C) 2017-2019 " + FENGARI_AUTHORS + "\nBased on: Fengari 0.1.4 and " + defs.LUA_COPYRIGHT;
+const FENGARI_AUTHORS         = "Aarav \"AsynchronousAI\" Sethi";
+const FENGARI_COPYRIGHT       = FENGARI_RELEASE + "  Copyright (C) 2019-2024 " + FENGARI_AUTHORS + "\nBased on: Fengari 0.1.4 and " + defs.LUA_COPYRIGHT;
 
 module.exports.FENGARI_AUTHORS         = FENGARI_AUTHORS;
 module.exports.FENGARI_COPYRIGHT       = FENGARI_COPYRIGHT;

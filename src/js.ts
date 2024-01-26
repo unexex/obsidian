@@ -1,11 +1,12 @@
 "use strict";
 
-const {
-	to_luastring
-} = require('./ob');
-const lua = require('./lua');
+const luaconf = require('./luaconf');
+const lua     = require('./lua');
 const lauxlib = require('./lauxlib');
-const lualib = require('./lualib');
+const lualib  = require('./lualib');
+const core = require('./obcore');
+
+const to_luastring = core.to_luastring;
 
 const {
 	LUA_MULTRET,
@@ -22,8 +23,6 @@ const {
 	LUA_TTABLE,
 	LUA_TTHREAD,
 	LUA_TUSERDATA,
-} = require('./defs');
-const {
 	lua_atnativeerror,
 	lua_call,
 	lua_getfield,
@@ -57,7 +56,7 @@ const {
 	lua_tothread,
 	lua_touserdata,
 	lua_type
-} = lua; 
+} = lua;
 const {
 	luaL_argerror,
 	luaL_checkany,
@@ -92,21 +91,25 @@ if (typeof process !== "undefined") {
 	} catch (e) {}
 }
 
-const global_env = (function() {
-	if (typeof process !== "undefined") {
-		/* node */
-		return global;
-	} else if (typeof window !== "undefined") {
-		/* browser window */
-		return window;
-	} else if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
-		/* web worker */
-		return self;
-	} else {
-		/* unknown global env */
-		return (0, eval)('this'); /* use non-strict mode to get global env */
-	}
-})();
+const global_env = (function(Object) {
+	return typeof globalThis === 'object' ?
+		globalThis // eslint-disable-line no-undef
+		: (this ?
+			// compat: strict mode is unsupported
+			this
+			: ( // Based on https://mathiasbynens.be/notes/globalthis
+				Object.defineProperty(Object.prototype, '_', {
+					configurable: true,
+					get: function () {
+						delete Object.prototype._;
+						return this;
+					}
+				})
+				/* global _ */
+				, _
+			)
+		);
+}(Object));
 
 let apply, construct, Reflect_deleteProperty;
 if (typeof Reflect !== "undefined") {

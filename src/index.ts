@@ -326,7 +326,7 @@ const doREPL = function(L) {
                 lua_getglobal(L, to_luastring("print"));
                 lua_insert(L, 1);
                 if (lua_pcall(L, n, 0, 0) != LUA_OK) {
-                    lua_writestringerror(`error calling 'print' (${lua_tojsstring(L, -1)})\n`);
+                    lua_writestringerror(`${lua_tojsstring(L, -1)}\n`);
                 }
             }
         } else {
