@@ -94,7 +94,7 @@ const {
 const fs       = require("fs");
 const sprintf  = require("sprintf-js").sprintf;
 
-const PROGNAME = "fengaric";      /* default program name */
+const PROGNAME = "obc";      /* default program name */
 const OUTPUT   =  PROGNAME + ".out";  /* default output file */
 
 let listing = false;   /* list bytecodes? */

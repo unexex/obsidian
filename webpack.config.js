@@ -31,7 +31,12 @@ module.exports = [
 			  use: 'ts-loader',
 			  exclude: /node_modules/,
 			},
-			// other rules...
+			{
+				test: [/\.lua$/, /\.ob$/],
+				use: [
+					{ loader: "./webpack/obsidian-loader" }
+				]
+			}
 		  ],
 		},
 		resolve: {

@@ -1,0 +1,84 @@
+{
+    "name": "obsidian-loader",
+    "version": "0.0.1",
+    "description": "Webpack loader for obsidian",
+    "repository": "https://github.com/unexex/obsidian",
+    "contributors": [
+      "Unexex      <admin@unexex.tech>",
+      "Daurnimator <quae@daurnimator.com>"
+    ],
+    "license": "MIT",
+    "scripts": {
+      "lint": "eslint src/ test/",
+      "test": "jest"
+    },
+    "main": "src/obsidian-loader.js",
+    "engines": {
+      "node": ">=8"
+    },
+    "devDependencies": {
+      "babel-jest": "^24.5.0",
+      "babel-preset-env": "^1.7.0",
+      "eslint": "^5.15.1",
+      "jest": "^24.5.0",
+      "memory-fs": "^0.4.1",
+      "webpack": "^4.29.6"
+    },
+    "peerDependencies": {
+      "webpack": "^3.0.0 || ^4.0.0"
+    },
+    "dependencies": {
+      "loader-utils": "^1.2.3",
+      "schema-utils": "^1.0.0"
+    },
+    "jest": {
+      "testEnvironment": "node"
+    },
+    "eslintConfig": {
+      "env": {
+        "es6": true,
+        "node": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 8
+      },
+      "extends": "eslint:recommended",
+      "rules": {
+        "indent": [
+          "error",
+          "tab",
+          {
+            "SwitchCase": 1
+          }
+        ],
+        "linebreak-style": [
+          "error",
+          "unix"
+        ],
+        "quotes": [
+          "error",
+          "single",
+          {
+            "allowTemplateLiterals": true
+          }
+        ],
+        "semi": [
+          "error",
+          "always"
+        ]
+      },
+      "overrides": [
+        {
+          "files": [
+            "test/*.js"
+          ],
+          "env": {
+            "jest": true
+          },
+          "parserOptions": {
+            "sourceType": "module"
+          }
+        }
+      ]
+    }
+  }

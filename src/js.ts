@@ -520,6 +520,11 @@ const jslib = {
 		push(L, construct(u, args));
 		return 1;
 	},
+	"eval": function(L) {
+		let code = lua_tojsstring(L, 1);
+		eval(code);
+		return 1;
+	},
 	"tonumber": function(L) {
 		let u = tojs(L, 1);
 		lua_pushnumber(L, +u);
