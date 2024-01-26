@@ -589,7 +589,7 @@ const c_p_f = to_luastring("\x1b[33m%f\x1b[0m");
 const c_p_s = to_luastring("\x1b[32m'%s'\x1b[0m");
 const p_I = to_luastring("%I");
 const p_f = to_luastring("%f");
-const p_s = to_luastring("'%s'");
+const p_s = to_luastring("%s");
 const luaL_tolstring = function(L, idx, color=true) {
     if (luaL_callmeta(L, idx, __tostring)) {
         if (!lua_isstring(L, -1))
