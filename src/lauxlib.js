@@ -584,6 +584,7 @@ const luaL_len = function(L, idx) {
 
 const p_I = to_luastring("\x1b[33m%I\x1b[0m");
 const p_f = to_luastring("\x1b[33m%f\x1b[0m");
+const p_s = to_luastring("\x1b[32m'%s'\x1b[0m");
 const luaL_tolstring = function(L, idx, color=true) {
     if (luaL_callmeta(L, idx, __tostring)) {
         if (!lua_isstring(L, -1))
@@ -599,10 +600,10 @@ const luaL_tolstring = function(L, idx, color=true) {
                 break;
             }
             case LUA_TSTRING:
-                lua_pushvalue(L, idx);
+                lua_pushfstring(L, p_s, lua_tostring(L, idx));
                 break;
             case LUA_TBOOLEAN:
-                lua_pushliteral(L, (lua_toboolean(L, idx) ? "\x1b[32mtrue\x1b[0m" : "\x1b[31mfalse\x1b[0m"));
+                lua_pushliteral(L, (lua_toboolean(L, idx) ? "\x1b[33mtrue\x1b[0m" : "\x1b[33mfalse\x1b[0m"));
                 break;
             case LUA_TNIL:
                 lua_pushliteral(L, "\x1b[90mnull\x1b[0m");
