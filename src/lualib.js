@@ -58,7 +58,7 @@ const LUA_LOADLIBNAME = "package";
 module.exports.LUA_LOADLIBNAME = LUA_LOADLIBNAME;
 module.exports.luaopen_package = require("./loadlib.js").luaopen_package;
 
-const LUA_FENGARILIBNAME = "fengari";
+const LUA_FENGARILIBNAME = "ob";
 module.exports.LUA_FENGARILIBNAME = LUA_FENGARILIBNAME;
 module.exports.luaopen_fengari = require("./oblib.js").luaopen_fengari;
 

@@ -138,7 +138,7 @@ if (typeof process === "undefined") {
             code += " //# sourceURL=" + path;
         let func;
         try {
-            func = Function("fengari", code);
+            func = Function("ob", code);
         } catch (e) {
             lua_pushstring(L, to_luastring(`${e.name}: ${e.message}`));
             return null;

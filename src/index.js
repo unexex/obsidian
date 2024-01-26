@@ -343,7 +343,6 @@ if (script < process.argv.length &&  /* execute main script (if there is one) */
     doREPL(L);
 } else if (script == process.argv.length && !has_e && !has_v) {  /* no arguments? */
     if (process.stdin.isTTY) {  /* running in interactive mode? */
-        console.log(FENGARI_COPYRIGHT);
         doREPL(L);  /* do read-eval-print loop */
     } else {
         dofile(L, null);
