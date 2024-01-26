@@ -27,7 +27,7 @@ const {
 const {
     luastring_of,
     to_luastring
-} = require("./obcore.js");
+} = require('./obcore');
 
 const MAXUNICODE = 0x10FFFF;
 

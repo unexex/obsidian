@@ -9,7 +9,7 @@ Copyright © 1994–2017 Lua.org, PUC-Rio.
 
 "use strict";
 
-const core = require("./obcore.js");
+const core = require('./obcore');
 
 module.exports.FENGARI_AUTHORS         = core.FENGARI_AUTHORS;
 module.exports.FENGARI_COPYRIGHT       = core.FENGARI_COPYRIGHT;

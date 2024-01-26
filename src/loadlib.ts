@@ -69,7 +69,7 @@ const {
     to_jsstring,
     to_luastring,
     to_uristring
-} = require("./obcore.js");
+} = require('./obcore');
 const fengari  = require('./ob');
 
 const global_env = (function() {

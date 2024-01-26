@@ -34,7 +34,7 @@ const {
     LUA_MININTEGER,
     lua_numbertointeger
 } = require('./luaconf');
-const { to_luastring } = require("./obcore.js");
+const { to_luastring } = require('./obcore');
 
 let rand_state;
 /* use same parameters as glibc LCG */

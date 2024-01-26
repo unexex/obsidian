@@ -48,7 +48,7 @@ const {
     luaL_typename
 } = require('./lauxlib');
 const lualib = require('./lualib');
-const { to_luastring } = require("./obcore.js");
+const { to_luastring } = require('./obcore');
 
 /*
 ** Operations that an object must define to mimic a table

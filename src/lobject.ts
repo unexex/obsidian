@@ -65,7 +65,7 @@ const {
     MAX_INT,
     luai_nummod,
     lua_assert
-} = require("./llimits.js");
+} = require('./llimits');
 const ltm     = require('./ltm');
 
 const LUA_TPROTO = LUA_NUMTAGS;

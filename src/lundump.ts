@@ -33,7 +33,7 @@ const {
     SIZE_C,
     SIZE_OP
 } = require('./lopcodes');
-const { lua_assert } = require("./llimits.js");
+const { lua_assert } = require('./llimits');
 const { luaS_bless } = require('./lstring');
 const {
     luaZ_read,

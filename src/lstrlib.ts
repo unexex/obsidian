@@ -79,7 +79,7 @@ const {
     luastring_indexOf,
     to_jsstring,
     to_luastring
-} = require("./obcore.js");
+} = require('./obcore');
 
 const sL_ESC  = '%';
 const L_ESC   = sL_ESC.charCodeAt(0);

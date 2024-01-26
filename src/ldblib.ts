@@ -77,7 +77,7 @@ const lualib = require('./lualib');
 const {
     luastring_indexOf,
     to_luastring
-} = require("./obcore.js");
+} = require('./obcore');
 
 /*
 ** If L1 != L, L1 can be in any state, and therefore there are no

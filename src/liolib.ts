@@ -32,7 +32,7 @@ const {
     luaL_testudata
 } = require('./lauxlib');
 const lualib = require('./lualib');
-const { to_luastring } = require("./obcore.js");
+const { to_luastring } = require('./obcore');
 
 const IO_PREFIX = "_IO_";
 const IOPREF_LEN = IO_PREFIX.length;

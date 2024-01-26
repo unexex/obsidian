@@ -1,6 +1,6 @@
 "use strict";
 
-const { lua_assert } = require("./llimits.js");
+const { lua_assert } = require('./llimits');
 
 class MBuffer {
     constructor() {

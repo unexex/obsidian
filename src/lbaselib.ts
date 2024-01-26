@@ -74,7 +74,7 @@ const {
 const {
     to_jsstring,
     to_luastring
-} = require("./obcore.js");
+} = require('./obcore');
 
 let lua_writestring;
 let lua_writeline;

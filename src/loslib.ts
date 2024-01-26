@@ -45,7 +45,7 @@ const {
     luastring_eq,
     to_jsstring,
     to_luastring
-} = require("./obcore.js");
+} = require('./obcore');
 
 /* options for ANSI C 89 (only 1-char options) */
 // const L_STRFTIMEC89 = to_luastring("aAbBcdHIjmMpSUwWxXyYZ%");

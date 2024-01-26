@@ -83,7 +83,7 @@ const {
     luastring_eq,
     to_luastring,
     to_uristring
-} = require("./obcore.js");
+} = require('./obcore');
 
 /* extra error code for 'luaL_loadfilex' */
 const LUA_ERRFILE = LUA_ERRERR+1;

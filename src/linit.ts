@@ -2,7 +2,7 @@
 
 const { lua_pop } = require('./lua');
 const { luaL_requiref } = require('./lauxlib');
-const { to_luastring } = require("./obcore.js");
+const { to_luastring } = require('./obcore');
 
 const loadedlibs = {};
 

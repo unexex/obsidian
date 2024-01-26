@@ -6,7 +6,7 @@
  * avoid a dependency on defs.js from lauxlib.js they are defined in this file.
  */
 
-const defs = require("./defs.js");
+const defs = require('./defs');
 
 const FENGARI_VERSION_MAJOR   = "0";
 const FENGARI_VERSION_MINOR   = "1";

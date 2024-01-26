@@ -24,7 +24,7 @@ const {
     },
     to_luastring
 } = require('./defs');
-const { lua_assert } = require("./llimits.js");
+const { lua_assert } = require('./llimits');
 const llex     = require('./llex');
 const lobject  = require('./lobject');
 const lopcodes = require('./lopcodes');

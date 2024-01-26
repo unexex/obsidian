@@ -4,33 +4,28 @@ const webpack = require('webpack');
 
 module.exports = [
 	{
-		/*
-		This target produces a file suitable for embedding onto any webpage via a <script> tag.
-		*/
 		name: 'script-tag',
-		entry: './src/web.js',
+		entry: './src/web.ts', // change this to your TypeScript entry file
 		target: 'web',
 		output: {
-			filename: 'web.js',
-			library: 'web',
-			libraryTarget: 'umd'
+		  filename: 'web.js',
+		  library: 'web',
+		  libraryTarget: 'umd'
 		},
 		devtool: 'hidden-source-map',
 		node: false,
 		module: {
-			rules: [
-				{
-					test: [/\.js$/],
-					loader: 'babel-loader',
-					options: {
-						presets: [['@babel/preset-env', {
-							"targets": {
-								"browsers": ["last 2 versions", "not safari <= 7", "not ie <= 10"]
-							}
-						}]]
-					}
-				}
-			]
+		  rules: [
+			{
+			  test: [/\.tsx?$/], // change this to handle .ts and .tsx files
+			  use: 'ts-loader',
+			  exclude: /node_modules/,
+			},
+			// other rules...
+		  ],
+		},
+		resolve: {
+		  extensions: ['.tsx', '.ts', '.js'], // add .ts and .tsx here
 		},
 		plugins: [
 			new webpack.DefinePlugin({
@@ -45,7 +40,7 @@ module.exports = [
 		It is expected that most people would minify this with their own build process
 		*/
 		name: 'bundle',
-		entry: './src/web.js',
+		entry: './src/web.ts',
 		target: 'web',
 		output: {
 			filename: 'web.bundle.js',
@@ -53,6 +48,9 @@ module.exports = [
 		},
 		devtool: 'hidden-source-map',
 		node: false,
+		resolve: {
+		  extensions: ['.tsx', '.ts', '.js'], // add .ts and .tsx here
+		},
 		plugins: [
 			new webpack.DefinePlugin({
 				"process.env.FENGARICONF": "void 0",
