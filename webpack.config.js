@@ -15,7 +15,7 @@ module.exports = [
 			  }),
 			],
 		  },
-		entry: './src/web.ts',
+		entry: './src/web.js',
 		target: 'web',
 		output: {
 		  filename: 'web.js',
@@ -26,21 +26,10 @@ module.exports = [
 		node: false,
 		module: {
 		  rules: [
-			{
-			  test: [/\.tsx?$/],
-			  use: 'ts-loader',
-			  exclude: /node_modules/,
-			},
-			{
-				test: [/\.lua$/, /\.ob$/],
-				use: [
-					{ loader: "./webpack/obsidian-loader" }
-				]
-			}
 		  ],
 		},
 		resolve: {
-		  extensions: ['.tsx', '.ts', '.js'], // add .ts and .tsx here
+		  extensions: ['.js'],
 		},
 		plugins: [
 			new webpack.DefinePlugin({
@@ -64,7 +53,7 @@ module.exports = [
 			  }),
 			],
 		  },
-		entry: './src/web.ts',
+		entry: './src/web.js',
 		target: 'web',
 		output: {
 			filename: 'web.bundle.js',
@@ -74,7 +63,7 @@ module.exports = [
 		devtool: 'hidden-source-map',
 		node: false,
 		resolve: {
-		  extensions: ['.tsx', '.ts', '.js'], // add .ts and .tsx here
+		  extensions: ['.js'], // add .ts and .tsx here
 		},
 		plugins: [
 			new webpack.DefinePlugin({
