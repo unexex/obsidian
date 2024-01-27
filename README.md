@@ -15,7 +15,8 @@ A light-weight, extremely fast Lua VM written in WASM, and JavaScript. It is a f
 # HTML:
 ## Compile:
 ```bash
-npm run build::wasm
+npm run build
+npm run wasm
 ```
 ## Usage:
 ```html
