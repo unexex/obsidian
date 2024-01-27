@@ -1,14 +1,14 @@
-<!-- Example HTML -->
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Test</title>
-        <script src="dist/web.bundle.js" type="text/javascript"></script>
-        <script type="application/ob">
-            local js = require "js"
-            local window = js.global
-            
-            window:alert("Hello from Fengari!")
-        </script>
-    </head>
+<body>
+<script>
+  fetch('index.wasm')
+  .then(response => response.arrayBuffer())
+  .then(bytes => WebAssembly.instantiate(bytes))
+</script>
+
+<script type="application/ob">
+    print("Hello, world!")
+</script>
+</body>
 </html>

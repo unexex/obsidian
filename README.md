@@ -1,5 +1,5 @@
 # Obsidian
-Ultra-fast Lua 5.3 for the web.
+A light-weight, extremely fast Lua VM written in WASM, and JavaScript. It is a fork of Fengari, and is compatible with Fengari's API.
 
 | Fengari | Obsidian |
 |---------|----------|
@@ -14,3 +14,26 @@ Ultra-fast Lua 5.3 for the web.
 | Test | Fengari | Lua | Luau | LuaJIT | Obsidian | Obsidian Compiled |
 |------|---------|-----|------|--------|----------|-------------------|
 | Print | 88ms | 3ms | 
+
+# HTML:
+## Compile:
+```bash
+npm run build::wasm
+```
+## Usage:
+```html
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  fetch('index.wasm')
+  .then(response => response.arrayBuffer())
+  .then(bytes => WebAssembly.instantiate(bytes))
+</script>
+
+<script type="application/ob">
+    print("Hello, world!")
+</script>
+</body>
+</html>
+```

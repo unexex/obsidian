@@ -10,6 +10,7 @@
     "lint": "eslint src/ test/ webpack.config.js",
     "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint",
     "build": "webpack --mode production",
+    "build::wasm": "javy compile dist/web.bundle.js",
     "prepare": "npm run build"
   },
   "repository": {
