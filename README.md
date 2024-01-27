@@ -3,13 +3,10 @@ A light-weight, extremely fast Lua VM written in WASM, and JavaScript. It is a f
 
 | Fengari | Obsidian |
 |---------|----------|
-| Written in JS | Written in TS & AS |
-| JS & Webpack seperate | JS & Webpack included |
-| Node support | Node, browser, bun.sh support |
-| 100% JS | TS & AS that compiles to WASM |
-| Import JS modules | Import JS & PY modules |
+| Written in JS | Written in JS & WASM |
+| JS library & Webpack seperate | JS library & Webpack included |
+| Node only support | Bun.sh support |
 | Interpret, Bytecode | Interpret, Bytecode, Compile to WASM (experimental) |
-| 
 ## Speed:
 | Test | Fengari | Lua | Luau | LuaJIT | Obsidian | Obsidian Compiled |
 |------|---------|-----|------|--------|----------|-------------------|
