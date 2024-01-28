@@ -582,7 +582,7 @@ const luaL_len = function(L, idx) {
     return l;
 };
 
-const node = typeof process !== 'undefined' && process.release && process.release.name === 'node';
+const node = true;
 
 const c_p_I = to_luastring("\x1b[33m%I\x1b[0m");
 const c_p_f = to_luastring("\x1b[33m%f\x1b[0m");

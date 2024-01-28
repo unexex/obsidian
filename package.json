@@ -10,10 +10,6 @@
     "lint": "eslint src/ test/ webpack.config.js",
     "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint",
     "build": "webpack --mode production",
-    "wasm::bundle": "javy compile dist/web.bundle.js -o web.wasm",
-    "wasm::cli": "javy compile dist/ob.bundle.js -o ob.wasm",
-    "wasm::bytecoder": "javy compile dist/obc.bundle.js -o obc.wasm",
-    "wasm": "npm run wasm::bundle && npm run wasm::cli && npm run wasm::bytecoder",
     "prepare": "npm run build"
   },
   "repository": {
