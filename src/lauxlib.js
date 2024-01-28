@@ -586,7 +586,7 @@ const node = true;
 
 const c_p_I = to_luastring("\x1b[33m%I\x1b[0m");
 const c_p_f = to_luastring("\x1b[33m%f\x1b[0m");
-const c_p_s = to_luastring("\x1b[32m'%s'\x1b[0m");
+const c_p_s = to_luastring("%s");//to_luastring("\x1b[32m'%s'\x1b[0m");
 const p_I = to_luastring("%I");
 const p_f = to_luastring("%f");
 const p_s = to_luastring("%s");

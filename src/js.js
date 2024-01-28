@@ -522,7 +522,7 @@ const jslib = {
 	},
 	"eval": function(L) {
 		let code = lua_tojsstring(L, 1);
-		eval(code);
+		pushjs(eval(code));
 		return 1;
 	},
 	"tonumber": function(L) {

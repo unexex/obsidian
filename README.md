@@ -1,5 +1,5 @@
 # Obsidian
-A light-weight, extremely fast Lua VM written in WASM, and JavaScript. It is a fork of Fengari, and is compatible with Fengari's API.
+A light-weight, extremely fast Lua VM and compiler written in JavaScript. It is a fork of Fengari, and is compatible with Fengari's API.
 
 | Fengari | Obsidian |
 |---------|----------|
