@@ -1,10 +1,15 @@
 const {
     lua_pushinteger,
     lua_pushliteral,
-    lua_setfield
+    lua_setfield,
+    LUA_OK,
+    lua_newtable
 } = require('./lua');
 const {
-    luaL_newlib
+    luaL_newlib,
+    luaL_checkstring,
+    luaL_optstring,
+    luaL_error
 } = require('./lauxlib');
 const {
     FENGARI_AUTHORS,
@@ -15,11 +20,28 @@ const {
     FENGARI_VERSION_MINOR,
     FENGARI_VERSION_NUM,
     FENGARI_VERSION_RELEASE,
-    to_luastring
+    to_luastring,
+    to_jsstring
 } = require('./obcore');
+const parser = require('./oparser');
+const js = require('./js');
+
+const parse = function(L) {
+    const buff = luaL_checkstring(L, 1);
+    var ast = parser.parse(to_jsstring(buff));
+
+    js.pushjs(L, ast);
+    
+    return 1;
+}
+
+
+const fengari_lib = {
+    "parse": parse
+};
 
 const luaopen_fengari = function(L) {
-    luaL_newlib(L, {});
+    luaL_newlib(L, fengari_lib);
     lua_pushliteral(L, FENGARI_AUTHORS);
     lua_setfield(L, -2, to_luastring("AUTHORS"));
     lua_pushliteral(L, FENGARI_COPYRIGHT);
