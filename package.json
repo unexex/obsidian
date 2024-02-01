@@ -1,7 +1,7 @@
 {
   "name": "obsidian",
   "version": "0.1.4",
-  "description": "A Lua VM written in JS ES6 targeting the browser",
+  "description": "A Lua VM & WASM compiler written in JS targeting the browser",
   "main": "src/ob.js",
   "directories": {
     "lib": "src"
@@ -31,15 +31,14 @@
   },
   "homepage": "https://unexex.tech",
   "devDependencies": {
-    "assemblyscript": "^0.27.23",
     "eslint": "^5.15.1",
     "jest": "^24.5.0",
     "terser-webpack-plugin": "^5.3.10",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.3.3",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@bytecodealliance/wizer": "^3.0.1",
+    "binaryen": "^116.0.0",
     "readline-sync": "^1.4.9",
     "sprintf-js": "^1.1.2",
     "tmp": "^0.0.33",

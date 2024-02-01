@@ -154,7 +154,7 @@ let has_e = false;
             case '-':
                 if (process.argv[i][2]) {
                     print_usage(process.argv[script]);
-                    return process.exit(1);
+                    process.exit(1);
                 }
                 script = i + 1;
                 return;
@@ -171,7 +171,7 @@ let has_e = false;
                 if (process.argv[i].length > 2) {
                     /* invalid option */
                     print_usage(process.argv[script]);
-                    return process.exit(1);
+                    process.exit(1);
                 }
                 has_v = true;
                 break;
@@ -184,13 +184,13 @@ let has_e = false;
                     if (process.argv.length <= i || process.argv[i][0] === '-') {
                         /* no next argument or it is another option */
                         print_usage(process.argv[script]);
-                        return process.exit(1);
+                        process.exit(1);
                     }
                 }
                 break;
             default:  /* invalid option */
                 print_usage(process.argv[script]);
-                return process.exit(1);
+                process.exit(1);
         }
     }
     script = i;
@@ -232,7 +232,7 @@ if (!has_E) {
             status = dostring(L, init, name);
         }
         if (status !== LUA_OK) {
-            return process.exit(1);
+            process.exit(1);
         }
     }
 }
@@ -251,7 +251,7 @@ for (let i = 1; i < script; i++) {
             status = dolibrary(L, extra);
         }
         if (status !== LUA_OK) {
-            return process.exit(1);
+            process.exit(1);
         }
     }
 }

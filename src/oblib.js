@@ -3,7 +3,9 @@ const {
     lua_pushliteral,
     lua_setfield,
     LUA_OK,
-    lua_newtable
+    lua_newtable,
+    lua_tojsstring,
+    lua_toboolean
 } = require('./lua');
 const {
     luaL_newlib,
@@ -26,18 +28,16 @@ const {
 const parser = require('./oparser');
 const js = require('./js');
 
-const parse = function(L) {
-    const buff = luaL_checkstring(L, 1);
-    var ast = parser.parse(to_jsstring(buff));
-
-    js.pushjs(L, ast);
-    
-    return 1;
-}
-
 
 const fengari_lib = {
-    "parse": parse
+    "parse": function(L) {
+        const buff = luaL_checkstring(L, 1);
+        var ast = parser.parse(to_jsstring(buff));
+    
+        js.pushjs(L, ast);
+        
+        return 1;
+    },
 };
 
 const luaopen_fengari = function(L) {

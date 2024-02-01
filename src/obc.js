@@ -39,7 +39,7 @@ const {
         LUA_TNUMINT,
         LUA_TSHRSTR
     }
-} = require(path.resolve(fengariPath, 'defs.js'));
+} = require('./defs.js');
 const {
     INDEXK,
     ISK,
@@ -85,12 +85,11 @@ const {
     iABx,
     iAsBx,
     iAx
-} = require(path.resolve(fengariPath, 'lopcodes.js'));
+} = require('./lopcodes.js');
 const {
     LUA_INTEGER_FMT,
     LUA_NUMBER_FMT
-} = require(path.resolve(fengariPath, 'luaconf.js'));
-
+} = require('./luaconf.js');
 const fs       = require("fs");
 const sprintf  = require("sprintf-js").sprintf;
 
