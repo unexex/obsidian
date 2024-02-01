@@ -25,19 +25,10 @@ const {
     to_luastring,
     to_jsstring
 } = require('./obcore');
-const parser = require('./oparser');
 const js = require('./js');
 
 
 const fengari_lib = {
-    "parse": function(L) {
-        const buff = luaL_checkstring(L, 1);
-        var ast = parser.parse(to_jsstring(buff));
-    
-        js.pushjs(L, ast);
-        
-        return 1;
-    },
 };
 
 const luaopen_fengari = function(L) {
